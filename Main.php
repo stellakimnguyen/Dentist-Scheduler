@@ -14,6 +14,10 @@
 </head>
 
 <body>
+        <?php 
+        include 'connection.php';
+        ?>
   <script src="js/scripts.js"></script>
+  
 </body>
 </html>
