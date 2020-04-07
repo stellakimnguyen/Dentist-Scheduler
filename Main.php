@@ -16,8 +16,14 @@
 <body>
         <?php 
         include 'connection.php';
+        include 'queries.php';
         ?>
   <script src="js/scripts.js"></script>
-  
+ 
+ <form method="post"> 
+        <input type="submit" name="button1"
+                class="button" value="Button1" /> 
+          
+    </form> 
 </body>
 </html>
