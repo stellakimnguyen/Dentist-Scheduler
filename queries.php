@@ -7,7 +7,7 @@ if(isset($_POST['button1'])) {
     //$beginning = "'2020-4-09 00:00:00'";
     //$end = "'2020-4-09 23:59:59'";
     //$pid = 3;
-    getUnpaidBills();
+    createNewAppointment($wid, $pid, $cid, $date);
 } 
 
 /*
@@ -23,11 +23,65 @@ if(isset($_POST['button1'])) {
     }
 */
 
-function queryDBA($sql){
+function addNewPatients($name){
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
 
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
+
+    $sql = "INSERT INTO patient (pid, name) VALUES (6, '" . $name . "');";
+
+    if (mysqli_query($conn, $sql)){
+        echo "New record created successfully";
+    }else{
+        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+    }
+
+    mysqli_close($conn);
+
+    //return $result;
 }
 
+function createNewAppointment($wid, $pid, $cid, $date){
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
 
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
+
+    $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . " ,'" . $date . "');";
+
+    if (mysqli_query($conn, $sql)){
+        echo "New record created successfully";
+    }else{
+        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+    }
+
+    mysqli_close($conn);
+
+    //return $result;
+}
+
+function queryDBA($sql){
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
+
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
+
+    $result = mysqli_query($conn, $sql);
+
+    mysqli_close($conn);
+
+    //return $result;
+}
 
 function retrieveAllDentists(){
     
@@ -85,7 +139,7 @@ function getAppointmentsForDentistForAWeek($wid, $beginning, $end){
 
     $sql = "SELECT * 
     FROM appointment
-    WHERE wid = " . $wid . " AND date_time BETWEEN " . $beginning . " AND " . $end . ";";
+    WHERE wid = " . $wid . " AND date_time BETWEEN '" . $beginning . "' AND '" . $end . "';";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
             echo "<table>";
@@ -137,7 +191,7 @@ function getAppointmentsForClinicForADay($cid, $beginning, $end){
 
     $sql = "SELECT * 
     FROM appointment
-    WHERE cid = " . $cid . " AND date_time BETWEEN " . $beginning . " AND " . $end . ";";
+    WHERE cid = " . $cid . " AND date_time BETWEEN '" . $beginning . "' AND '" . $end . "';";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
             echo "<table>";
