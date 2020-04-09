@@ -7,7 +7,7 @@ if(isset($_POST['button1'])) {
     //$beginning = "'2020-4-09 00:00:00'";
     //$end = "'2020-4-09 23:59:59'";
     //$pid = 3;
-    createNewAppointment($wid, $pid, $cid, $date);
+    deleteAppointment (11);
 } 
 
 /*
@@ -42,7 +42,6 @@ function addNewPatients($name){
 
     mysqli_close($conn);
 
-    //return $result;
 }
 
 function createNewAppointment($wid, $pid, $cid, $date){
@@ -54,7 +53,7 @@ function createNewAppointment($wid, $pid, $cid, $date){
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $database);
 
-    $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . " ,'" . $date . "');";
+    $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . ",'" . $date . "');";
 
     if (mysqli_query($conn, $sql)){
         echo "New record created successfully";
@@ -67,6 +66,86 @@ function createNewAppointment($wid, $pid, $cid, $date){
     //return $result;
 }
 
+function selectAppointment($aid){
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
+
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
+
+    $sql = "SELECT * FROM appointment WHERE aid = " . $aid . ";";
+
+    $result = mysqli_fetch_array(mysqli_query($conn, $sql));
+
+    //echo $result['wid'] . " - " . $result['pid'] . " - " . $result['cid'] . " - " . $result['status'] . " - " . $result['date_time'];
+
+    mysqli_close($conn);
+
+    return $result;
+
+}
+
+function updateAppointment ($aid, $wid, $pid, $cid, $status, $date_time){
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
+
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
+
+    $sql = "UPDATE appointment set wid = " . $wid . ", pid = " . $pid . ", cid = " . $cid . ", status = '" . $status . "', date_time = '" . $date_time . "' WHERE aid = " . $aid . ";";
+
+    if (mysqli_query($conn, $sql)){
+        echo "Record updated successfully";
+    }else{
+        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+    }
+
+    mysqli_close($conn);
+}
+
+function deleteAppointment($aid){
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
+
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
+
+    $sql = "DELETE FROM appointment WHERE aid = " . $aid . ";";
+
+    if(mysqli_query($conn, $sql)){
+        echo "Record deleted successfully";
+    }else{
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
+
+    mysqli_close($conn);
+
+}
+
+function getAllPatients(){
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
+
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
+    $sql = "SELECT * FROM patient;";
+    $result = mysqli_query($conn, $sql); 
+
+    return mysqli_fetch_array($result); // value = ['pid'], name = ['name']
+
+    mysqli_close($conn);
+
+    
+}
+
 function queryDBA($sql){
     $servername = "localhost:3306";
     $database = "mainproject";
@@ -76,11 +155,14 @@ function queryDBA($sql){
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $database);
 
-    $result = mysqli_query($conn, $sql);
+    if (mysqli_query($conn, $sql)){
+        echo "Query passed successfully";
+    }else{
+        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+    }
 
     mysqli_close($conn);
 
-    //return $result;
 }
 
 function retrieveAllDentists(){
@@ -120,7 +202,10 @@ function retrieveAllDentists(){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
+    return mysqli_fetch_array($result);
+
     mysqli_close($conn);
+    
 }
 
 
@@ -173,6 +258,7 @@ function getAppointmentsForDentistForAWeek($wid, $beginning, $end){
 
     mysqli_close($conn);
 
+    return $row;
 
 }
 
