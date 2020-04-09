@@ -1,0 +1,132 @@
+html,
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+}
+
+select, input {
+    padding: 6px;
+    border-radius: 6px;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    text-align-last: center;
+    font-family: Arial, Helvetica, sans-serif;
+
+    -moz-appearance:none; /* Firefox */
+    -webkit-appearance:none; /* Safari and Chrome */
+    appearance:none;
+
+    /* -moz-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1); */
+}
+
+h1 {
+    margin-top: 0px;
+}
+
+h4 { /* Additional details title */
+    margin-top: 10px;
+    display: inline-block;
+}
+
+button {
+    padding: 5px;
+    border-radius: 5px;
+    border: 0;
+    outline: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.container > div {
+    -moz-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+}
+
+.content, .databaseModifications {
+    border-radius: 15px;
+}
+
+.request {
+    background: #eaedf4;
+    padding: 30px;
+    border-radius: 15px 15px 0 0;
+    transition: 250ms;
+}
+
+.request, .requestPreview > label {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+#onSpecificPeriod {
+    display: inline-block;
+}
+
+.sendButton {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid #000;
+    border-right: 2px solid #000;
+    transform: rotate(45deg);
+    cursor: pointer;
+    transition: 250ms;
+}
+
+.sendButton:hover {
+    transform: scale(1.2) rotate(45deg);
+}
+
+.additionalDetails {
+    margin-top: 20px;
+    transition: 250ms;
+}
+
+.additionalDetails > * {
+    transition: 250ms;
+}
+
+.hidden {
+    height: 0;
+    width: 0;
+    margin-top: 0;
+    /* visibility: hidden; */
+    opacity: 0;
+    pointer-events: none;
+    transition: 250ms;
+}
+
+.timeSelection {
+    transition: 250ms;
+}
+
+.requestPreview {
+    padding: 15px 30px;
+    display: inline-block;
+}
+
+#stringRequest {
+    display: inline-block;
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 5px 10px;
+    color: #636363;
+    font-size: 10pt;
+}
+
+.databaseModifications {
+    margin-top: 30px;
+    background: red;
+    display: block;
+}
