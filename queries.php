@@ -1,13 +1,18 @@
-<?php
-        
+<?php 
+    
 //here we will add the functions
 
 if(isset($_POST['button1'])) { 
 
+    // Create connection
+    $conn = openConnection();
     //$beginning = "'2020-4-09 00:00:00'";
     //$end = "'2020-4-09 23:59:59'";
     //$pid = 3;
-    deleteAppointment (11);
+    createNewAppointment ($conn, 5, 1, "2020-7-10 14:20:00");
+    
+    
+    closeConnection($conn);
 } 
 
 /*
@@ -23,15 +28,8 @@ if(isset($_POST['button1'])) {
     }
 */
 
-function addNewPatients($name){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
+function addNewPatients($conn, $name){
+    
     $sql = "INSERT INTO patient (pid, name) VALUES (6, '" . $name . "');";
 
     if (mysqli_query($conn, $sql)){
@@ -40,20 +38,11 @@ function addNewPatients($name){
         echo "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
 }
 
-function createNewAppointment($wid, $pid, $cid, $date){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
+function createNewAppointment($conn, $pid, $cid, $date){
 
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-    $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . ",'" . $date . "');";
+    $sql = "INSERT INTO appointment (pid,cid,date_time) VALUES (" . $pid . ", " . $cid . ",'" . $date . "');";
 
     if (mysqli_query($conn, $sql)){
         echo "New record created successfully";
@@ -61,19 +50,9 @@ function createNewAppointment($wid, $pid, $cid, $date){
         echo "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-    //return $result;
 }
 
-function selectAppointment($aid){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function selectAppointment($conn, $aid){
 
     $sql = "SELECT * FROM appointment WHERE aid = " . $aid . ";";
 
@@ -81,20 +60,12 @@ function selectAppointment($aid){
 
     //echo $result['wid'] . " - " . $result['pid'] . " - " . $result['cid'] . " - " . $result['status'] . " - " . $result['date_time'];
 
-    mysqli_close($conn);
 
     return $result;
 
 }
 
-function updateAppointment ($aid, $wid, $pid, $cid, $status, $date_time){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function updateAppointment ($conn, $aid, $wid, $pid, $cid, $status, $date_time){
 
     $sql = "UPDATE appointment set wid = " . $wid . ", pid = " . $pid . ", cid = " . $cid . ", status = '" . $status . "', date_time = '" . $date_time . "' WHERE aid = " . $aid . ";";
 
@@ -104,17 +75,12 @@ function updateAppointment ($aid, $wid, $pid, $cid, $status, $date_time){
         echo "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
 }
 
-function deleteAppointment($aid){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function deleteAppointment($conn, $aid){
+    
+    $sql = "DELETE FROM treatment WHERE aid = " . $aid . ";";
+    mysqli_query($conn, $sql);
 
     $sql = "DELETE FROM appointment WHERE aid = " . $aid . ";";
 
@@ -124,36 +90,18 @@ function deleteAppointment($aid){
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
 }
 
-function getAllPatients(){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function getAllPatients($conn){
+    
     $sql = "SELECT * FROM patient;";
     $result = mysqli_query($conn, $sql); 
 
     return mysqli_fetch_array($result); // value = ['pid'], name = ['name']
-
-    mysqli_close($conn);
-
     
 }
 
-function queryDBA($sql){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function queryDBA($conn, $sql){
 
     if (mysqli_query($conn, $sql)){
         echo "Query passed successfully";
@@ -161,20 +109,9 @@ function queryDBA($sql){
         echo "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
 }
 
-function retrieveAllDentists(){
-    
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
+function retrieveAllDentists($conn){
 
     $sql = "SELECT * FROM dentist";
     if($result = mysqli_query($conn, $sql)){
@@ -204,23 +141,10 @@ function retrieveAllDentists(){
 
     return mysqli_fetch_array($result);
 
-    mysqli_close($conn);
-    
 }
 
 
-function getAppointmentsForDentistForAWeek($wid, $beginning, $end){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-    
+function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){  
 
     $sql = "SELECT * 
     FROM appointment
@@ -256,24 +180,9 @@ function getAppointmentsForDentistForAWeek($wid, $beginning, $end){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-    return $row;
-
 }
 
-function getAppointmentsForClinicForADay($cid, $beginning, $end){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-    
+function getAppointmentsForClinicForADay($conn, $cid, $beginning, $end){
 
     $sql = "SELECT * 
     FROM appointment
@@ -309,21 +218,9 @@ function getAppointmentsForClinicForADay($cid, $beginning, $end){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-
 }
 
-function getAppointmentsForPatient($pid){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function getAppointmentsForPatient($conn, $pid){
 
     $sql = "SELECT * 
     FROM appointment
@@ -360,21 +257,9 @@ function getAppointmentsForPatient($pid){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-
 }
 
-function getMissedAppointmentForAll(){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function getMissedAppointmentForAll($conn){
 
     $sql = "SELECT pid, COUNT(status)
     From appointment
@@ -404,21 +289,9 @@ function getMissedAppointmentForAll(){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-
 }
 
-function getTreatmentDetailForAppointment($aid){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function getTreatmentDetailForAppointment($conn, $aid){
 
     $sql = "SELECT *
     From treatment
@@ -453,22 +326,9 @@ function getTreatmentDetailForAppointment($aid){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
-
-    mysqli_close($conn);
-
-
 }
 
-function getUnpaidBills(){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function getUnpaidBills($conn){
 
     $sql = "SELECT *
     FROM bill
@@ -498,9 +358,6 @@ function getUnpaidBills(){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
-
-    mysqli_close($conn);
-
 
 }
 

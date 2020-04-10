@@ -14,8 +14,7 @@
 </head>
 
 <body>
-        <?php 
-        include 'connection.php';
+        <?php
         include 'queries.php';
         ?>
   <script src="js/scripts.js"></script>
