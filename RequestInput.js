@@ -253,7 +253,9 @@ function computePreview(specifics, selected) {
         case "dentist":
         case "clinic":
             poolValue = getOptionText(selected);
+            break;
         case "appointment":
+            poolValue = getOptionText(selected);
             dateValue = "appointed date";
             break;
         case "week":
