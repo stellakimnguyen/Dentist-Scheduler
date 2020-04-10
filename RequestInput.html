@@ -65,28 +65,28 @@
           <div id="additionalDetails" class="additionalDetails hidden">
             <div id="patientSelection" class="patientSelection hidden">
               <h4>Which patient?</h4>
-              <select onchange="computePreview('patient')" id="patient">
+              <select id="patient" onchange="computePreview('patient', this)">
                 <option value="" selected disabled hidden />
               </select id>
             </div>
 
-            <div onchange="computePreview('dentist')" id="dentistSelection" class="dentistSelection hidden">
+            <div id="dentistSelection" class="dentistSelection hidden">
               <h4>Which dentist?</h4>
-              <select id="dentist">
+              <select id="dentist" onchange="computePreview('dentist', this)">
                 <option value="" selected disabled hidden />
               </select id>
             </div>
 
-            <div onchange="computePreview('clinic')" id="clinicSelection" class="clinicSelection hidden">
+            <div id="clinicSelection" class="clinicSelection hidden">
               <h4>Which clinic?</h4>
-              <select id="clinic">
+              <select id="clinic" onchange="computePreview('clinic', this)">
                 <option value="" selected disabled hidden />
               </select id>
             </div>
 
-            <div onchange="computePreview('appointment')" id="appointmentSelection" class="appointmentSelection hidden">
+            <div id="appointmentSelection" class="appointmentSelection hidden">
               <h4>Which appointment?</h4>
-              <select id="appointment">
+              <select id="appointment" onchange="computePreview('appointment', this)">
                 <option value="" selected disabled hidden />
               </select id>
             </div>

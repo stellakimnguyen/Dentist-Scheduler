@@ -1,77 +1,81 @@
 // TEST VALUES
 const patients = [
     {
-        value: 'Maryam Benadada',
+        value: "1",
         text: "Maryam Benadada",
     },
     {
-        value: 'Stella Nguyen',
+        value: "2",
         text: "Stella Nguyen",
     },
     {
-        value: 'Finn Davidson',
+        value: "3",
         text: "Finn Davidson",
     },
 ];
 const dentists = [
     {
-        value: 'Kim Trang',
+        value: "1",
         text: 'Kim Trang'
     },
     {
-        value: 'Manh Cuong',
+        value: "2",
         text: 'Manh Cuong'
     },
     {
-        value: 'Kim Chi',
+        value: "3",
         text: 'Kim Chi'
     },
     {
-        value: 'Giao Trinh',
+        value: "4",
         text: 'Giao Trinh'
     },
     {
-        value: 'Bao Nguyen',
+        value: "5",
         text: 'Bao Nguyen'
     },
 ];
 const clinics = [
     {
-        value: 'Complexe Desjardins',
+        value: "1",
         text: "Complexe Desjardins"
     },
     {
-        value: 'Côte-des-Neiges',
+        value: "2",
         text: "Côte-des-Neiges"
     },
     {
-        value: 'Rockland Center',
+        value: "3",
         text: "Rockland Center"
+    },
+    {
+        value: "4",
+        text: "Le Riverain"
     },
 ];
 const appointments = [
     {
-        value: 'Appointment 1',
+        value: "1",
         text: "Appointment 1"
     },
     {
-        value: 'Appointment 2',
+        value: "2",
         text: "Appointment 2"
     },
     {
-        value: 'Appointment 3',
+        value: "3",
         text: "Appointment 3"
     },
     {
-        value: 'Appointment 4',
+        value: "4",
         text: "Appointment 4"
     },
     {
-        value: 'Appointment 5',
+        value: "5",
         text: "Appointment 5"
     },
     {
-        value: 'Appointment 6',
+        value: "6",
         text: "Appointment 6"
     },
 ];
@@ -81,10 +85,11 @@ const patientSelection = document.getElementById("patientSelection");
 const dentistSelection = document.getElementById("dentistSelection");
 const clinicSelection = document.getElementById("clinicSelection");
 const appointmentSelection = document.getElementById("appointmentSelection");
+const timeForm = document.getElementById("timeSelection");
 const onSpecificPeriod = document.getElementById("onSpecificPeriod");
 const additionalDetails = document.getElementById("additionalDetails");
-const timeForm = document.getElementById("timeSelection");
 const amount = document.getElementById("number");
+
 const requestPreview = document.getElementById("stringRequest");
 const weekForm = document.getElementById("week");
 const dayForm = document.getElementById("day");
@@ -96,7 +101,8 @@ const pool = document.getElementById('pool');
 const date = document.getElementById('date');
 
 // REQUEST VARIABLES
-var request;
+var userRequest;
+var requestToSend;
 
 function optionExists( optionToCheck, selectElement) { // determines if option already exists in select tag
     var optionExists = false,
@@ -179,6 +185,8 @@ function additionalPoolDetails() {
         }
     } else {
         additionalDetails.classList.toggle('hidden', true);
+        // onSpecificPeriod.classList.toggle('hidden', true);
+        // TO DO: Only enable all days option for time period when !given
     }
 }
 
@@ -225,7 +233,11 @@ function getWeekDates(weekNumber) {
         + ' 00:00:00 to ' + weekEnd.substr(0, weekStart.indexOf('T')) + ' 00:00:00'); // return ISO format for SQL
 }
 
-function computePreview(specifics) {
+function getOptionText(selectedOption) { // as 'value' is associated with the tuple's ID
+    return (selectedOption.options[selectedOption.selectedIndex].text);
+}
+
+function computePreview(specifics, selected) {
     if (specifics) { // if *given* was chosen (i.e. asking for specific element)
         numberValue = "";
     } else {
@@ -236,20 +248,12 @@ function computePreview(specifics) {
         dateValue = date.value;
     }
 
-    switch(specifics) {
+    switch(specifics) { // if specific attribute, use text instead of value (which is associated with ID)
         case "patient":
-            poolValue = document.getElementById("patient").value;
-            console.log(document.getElementById("patient").text);
-            console.log(document.getElementById("patient").value);
-            break;
         case "dentist":
-            poolValue = document.getElementById("dentist").value;
-            break;
         case "clinic":
-            poolValue = document.getElementById("clinic").value;
-            break;
+            poolValue = getOptionText(selected);
         case "appointment":
-            poolValue = document.getElementById("appointment").value;
             dateValue = "appointed date";
             break;
         case "week":
@@ -259,10 +263,11 @@ function computePreview(specifics) {
             dateValue = dayForm.value;
     }
 
-    request = `Get ${infoValue} of all ${typeValue} for ${numberValue} ${poolValue} on ${dateValue}`;
-    requestPreview.innerHTML = request;
+    userRequest = `Get ${infoValue} of all ${typeValue} for ${numberValue} ${poolValue} on ${dateValue}`;
+    requestToSend = [infoValue, typeValue, numberValue, poolValue, dateValue];
+    requestPreview.innerHTML = userRequest;
 }
 
 function sendRequest() {
-    console.log(request);
+    console.log(requestToSend);
 }
