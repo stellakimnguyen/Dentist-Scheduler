@@ -1,5 +1,5 @@
 <?php 
-    
+    include 'connection.php';
 //here we will add the functions
 
 if(isset($_POST['button1'])) { 
@@ -9,7 +9,7 @@ if(isset($_POST['button1'])) {
     //$beginning = "'2020-4-09 00:00:00'";
     //$end = "'2020-4-09 23:59:59'";
     //$pid = 3;
-    createNewAppointment ($conn, 5, 1, "2020-7-10 14:20:00");
+    createNewAppointment ($conn,3,4, 1, "2020-7-10 10:00:00");
     
     
     closeConnection($conn);
@@ -40,10 +40,13 @@ function addNewPatients($conn, $name){
 
 }
 
-function createNewAppointment($conn, $pid, $cid, $date){
-
-    $sql = "INSERT INTO appointment (pid,cid,date_time) VALUES (" . $pid . ", " . $cid . ",'" . $date . "');";
-
+function createNewAppointment($conn, $wid, $pid, $cid, $date){
+    
+    if (strlen($wid) == 0){
+        $sql = "INSERT INTO appointment (pid,cid,date_time) VALUES (" . $pid . ", " . $cid . ",'" . $date . "');";
+    }else{
+        $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . ",'" . $date . "');";
+    }
     if (mysqli_query($conn, $sql)){
         echo "New record created successfully";
     }else{
