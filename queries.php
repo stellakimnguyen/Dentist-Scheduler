@@ -6,12 +6,10 @@ if(isset($_POST['button1'])) {
 
     // Create connection
     $conn = openConnection();
-    //$beginning = "'2020-4-09 00:00:00'";
-    //$end = "'2020-4-09 23:59:59'";
-    //$pid = 3;
-    createNewAppointment ($conn,3,4, 1, "2020-7-10 10:00:00");
     
+    retrieveAllDentists ($conn);
     
+    //close connection
     closeConnection($conn);
 } 
 
@@ -104,7 +102,7 @@ function getAllPatients($conn){
     
 }
 
-function queryDBA($conn, $sql){
+function queryDBA($conn, $sql){//to modify
 
     if (mysqli_query($conn, $sql)){
         echo "Query passed successfully";
@@ -116,24 +114,17 @@ function queryDBA($conn, $sql){
 
 function retrieveAllDentists($conn){
 
+    $tempArr = array();
+
     $sql = "SELECT * FROM dentist";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>wid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>name</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['name'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
+                
             }
-            echo "</table>";
-            // Free result set
+           
             mysqli_free_result($result);
         } else{
             echo "No records matching your query were found.";
@@ -142,38 +133,29 @@ function retrieveAllDentists($conn){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    return mysqli_fetch_array($result);
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        echo $tempArr[$i]['wid'] . " xx " . $tempArr[$i]['name'] . " xx " . $tempArr[$i]['cid'] . "<br>";
+    }
+
+    return $tempArr;
 
 }
 
 
 function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){  
 
+    $tempArr = array();
+
     $sql = "SELECT * 
     FROM appointment
     WHERE wid = " . $wid . " AND date_time BETWEEN '" . $beginning . "' AND '" . $end . "';";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>status</th>";
-                    echo "<th>date_time</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                    echo "<td>" . $row['date_time'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -183,35 +165,22 @@ function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
+    return $tempArr;
+
 }
 
 function getAppointmentsForClinicForADay($conn, $cid, $beginning, $end){
-
+    $tempArr = array();
     $sql = "SELECT * 
     FROM appointment
     WHERE cid = " . $cid . " AND date_time BETWEEN '" . $beginning . "' AND '" . $end . "';";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>status</th>";
-                    echo "<th>date_time</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                    echo "<td>" . $row['date_time'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -221,9 +190,12 @@ function getAppointmentsForClinicForADay($conn, $cid, $beginning, $end){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
+    return $tempArr;
 }
 
 function getAppointmentsForPatient($conn, $pid){
+
+    $tempArr = array();
 
     $sql = "SELECT * 
     FROM appointment
@@ -231,26 +203,11 @@ function getAppointmentsForPatient($conn, $pid){
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>status</th>";
-                    echo "<th>date_time</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                    echo "<td>" . $row['date_time'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -260,10 +217,11 @@ function getAppointmentsForPatient($conn, $pid){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
+    return $tempArr;
 }
 
 function getMissedAppointmentForAll($conn){
-
+    $tempArr = array();
     $sql = "SELECT pid, COUNT(status)
     From appointment
     WHERE status = 'missed'
@@ -271,18 +229,11 @@ function getMissedAppointmentForAll($conn){
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>pid</th>";
-                    echo "<th>number of missed apt</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['COUNT(status)'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -291,11 +242,12 @@ function getMissedAppointmentForAll($conn){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
+    return $tempArr;
 
 }
 
 function getTreatmentDetailForAppointment($conn, $aid){
-
+    $tempArry = array();
     $sql = "SELECT *
     From treatment
     WHERE aid = " . $aid . ";
@@ -303,24 +255,11 @@ function getTreatmentDetailForAppointment($conn, $aid){
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>tid</th>";
-                    echo "<th>cid</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['tid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -329,30 +268,22 @@ function getTreatmentDetailForAppointment($conn, $aid){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
+    return $tempArr;
 }
 
 function getUnpaidBills($conn){
-
+    $tempArr = array();
     $sql = "SELECT *
     FROM bill
     WHERE status = 'unpaid'";
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>tid</th>";
-                    echo "<th>cost</th>";
-                    echo "<th>status</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['tid'] . "</td>";
-                    echo "<td>" . $row['cost'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -361,7 +292,7 @@ function getUnpaidBills($conn){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
-
+    return $tempArr;
 }
 
 ?>
