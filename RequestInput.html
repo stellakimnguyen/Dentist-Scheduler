@@ -18,7 +18,7 @@
           <label>Get </label>
 
           <select onchange="computePreview()" id="info">
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="details">details</option>
             <option value="number">number</option>
           </select>
@@ -26,7 +26,7 @@
           <label> of all </label>
 
           <select onchange="computePreview()" id="type">
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="dentists">dentists</option>
             <option value="appointments">appointments</option>
             <option value="missed appointments">missed appointments</option>
@@ -37,14 +37,14 @@
           <label> for </label>
 
           <select id="number" onchange={triggerAdditionalSection();computePreview()}>
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="all">all</option>
             <option value="given">given</option>
             <option value="each">each</option>
           </select>
 
           <select id="pool" onchange={additionalPoolDetails();computePreview()}>
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="clinic(s)">clinic(s)</option>
             <option value="dentist(s)">dentist(s)</option>
             <option value="patient">patient(s)</option>
@@ -54,7 +54,7 @@
           <div id="onSpecificPeriod">
             <label> on </label>
             <select id="date" onchange={additionalDateDetails();computePreview()}>
-              <option value="" selected disabled hidden />
+              <option value="" selected disabled hidden></option>
               <option value="all days">all days</option>
               <option value="specific week">specific week</option>
               <option value="specific date">specific date</option>
@@ -66,28 +66,28 @@
             <div id="patientSelection" class="patientSelection hidden">
               <h4>Which patient?</h4>
               <select id="patient" onchange="computePreview('patient', this)">
-                <option value="" selected disabled hidden />
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
             <div id="dentistSelection" class="dentistSelection hidden">
               <h4>Which dentist?</h4>
               <select id="dentist" onchange="computePreview('dentist', this)">
-                <option value="" selected disabled hidden />
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
             <div id="clinicSelection" class="clinicSelection hidden">
               <h4>Which clinic?</h4>
               <select id="clinic" onchange="computePreview('clinic', this)">
-                <option value="" selected disabled hidden />
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
             <div id="appointmentSelection" class="appointmentSelection hidden">
               <h4>Which appointment?</h4>
               <select id="appointment" onchange="computePreview('appointment', this)">
-                <option value="" selected disabled hidden />
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
