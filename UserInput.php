@@ -16,6 +16,7 @@
     <div class="main-container">
       <?php include 'RequestInput.html';?>
       <?php include 'DBModifications.html';?>
+      <?php include 'SQLQuery.html';?>
     </div>
     
 </body>

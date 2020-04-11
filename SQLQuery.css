@@ -1,0 +1,27 @@
+label {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.sql-container {
+    margin-top: 30px;
+    padding: 15px 30px;
+    border-radius: 15px;
+    background: #eaedf4;
+    transition: 250ms;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    -moz-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+}
+
+.sql-container > input {
+    font-family: "Lucida Console";
+}
+
+.sql-container > input {
+    width: 75%;
+}
