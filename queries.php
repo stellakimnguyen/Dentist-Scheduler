@@ -7,7 +7,7 @@ if(isset($_POST['button1'])) {
     // Create connection
     $conn = openConnection();
     
-    retrieveAllDentists ($conn);
+    getAllAppointment ($conn);
     
     //close connection
     closeConnection($conn);
@@ -94,13 +94,83 @@ function deleteAppointment($conn, $aid){
 }
 
 function getAllPatients($conn){
-    
-    $sql = "SELECT * FROM patient;";
-    $result = mysqli_query($conn, $sql); 
+    $tempArr = array();
+    $sql = "SELECT * FROM patient;"; 
 
-    return mysqli_fetch_array($result); // value = ['pid'], name = ['name']
-    
+    if($result = mysqli_query($conn, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            
+            while($row = mysqli_fetch_array($result)){
+                array_push($tempArr, $row);
+                
+            }
+           
+            mysqli_free_result($result);
+        } else{
+            echo "No records matching your query were found.";
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    return $tempArr;
 }
+
+function getAllClinics($conn){
+    $tempArr = array();
+    $sql = "SELECT * FROM clinic;"; 
+
+    if($result = mysqli_query($conn, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            
+            while($row = mysqli_fetch_array($result)){
+                array_push($tempArr, $row);
+                
+            }
+           
+            mysqli_free_result($result);
+        } else{
+            echo "No records matching your query were found.";
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        echo $tempArr[$i]['cid'] . " x---x " . $tempArr[$i]['name'] . " x---x " . $tempArr[$i]['address'] . "<br>";
+    }
+
+    return $tempArr;
+}
+
+function getAllAppointment($conn){
+    $tempArr = array();
+    $sql = "SELECT * FROM appointment;"; 
+
+    if($result = mysqli_query($conn, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            
+            while($row = mysqli_fetch_array($result)){
+                array_push($tempArr, $row);
+                
+            }
+           
+            mysqli_free_result($result);
+        } else{
+            echo "No records matching your query were found.";
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        echo $tempArr[$i]['aid'] . " x---x " . $tempArr[$i]['date_time'] . " x---x " . $tempArr[$i]['status'] . "<br>";
+    }
+
+    return $tempArr;
+}
+
+
 
 function queryDBA($conn, $sql){//to modify
 
