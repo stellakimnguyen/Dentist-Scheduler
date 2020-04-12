@@ -176,6 +176,7 @@ function getAllAppointment($conn){
 }
 
 function queryDBA($conn, $sql){ //to modify
+    $tempArr = array();
     $arr = explode(' ',trim($sql));
     $keyword = $arr[0];
     if($result = mysqli_query($conn, $sql)){
@@ -192,7 +193,7 @@ function queryDBA($conn, $sql){ //to modify
                 echo "No records matching your query were found.";
             }
             
-           
+           return $tempArr;
             
         } else if (strcmp($keyword, "DELETE") == 0){
             echo "Record has been successfully deleted";
@@ -200,6 +201,8 @@ function queryDBA($conn, $sql){ //to modify
             echo "Record has been successfully added";
         }else if (strcmp($keyword, "UPDATE") == 0){
             echo "Record has been successfully updated";
+        }else{
+            echo "Query run successfully.";
         }
 
         
