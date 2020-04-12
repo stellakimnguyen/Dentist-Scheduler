@@ -2,7 +2,7 @@
     include 'connection.php';
 //here we will add the functions
 
-if(isset($_POST['button1'])) { 
+if(isset($_POST['button1'])) { // isset gets button click of button with name button1 (maybe id?)
 
     // Create connection
     $conn = openConnection();
@@ -15,6 +15,7 @@ if(isset($_POST['button1'])) {
     closeConnection($conn);
 } 
 
+// TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
 /*
  if (isset($_POST['action'])) {
         switch ($_POST['action']) {
@@ -142,7 +143,7 @@ function getAllClinics($conn){
 
     for ($i = 0; $i< sizeof($tempArr); $i++){
         echo $tempArr[$i]['cid'] . " x---x " . $tempArr[$i]['name'] . " x---x " . $tempArr[$i]['address'] . "<br>";
-    }
+    } // access array that is returned
 
     return $tempArr;
 }
@@ -169,12 +170,12 @@ function getAllAppointment($conn){
 
     for ($i = 0; $i< sizeof($tempArr); $i++){
         echo $tempArr[$i]['aid'] . " x---x " . $tempArr[$i]['date_time'] . " x---x " . $tempArr[$i]['status'] . "<br>";
-    }
+    } // access array that is returned
 
     return $tempArr;
 }
 
-function queryDBA($conn, $sql){//to modify
+function queryDBA($conn, $sql){ //to modify
     $arr = explode(' ',trim($sql));
     $keyword = $arr[0];
     if($result = mysqli_query($conn, $sql)){
@@ -187,7 +188,7 @@ function queryDBA($conn, $sql){//to modify
                     
                 }
                 mysqli_free_result($result);
-            }else{
+            } else {
                 echo "No records matching your query were found.";
             }
             
