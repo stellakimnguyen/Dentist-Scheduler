@@ -192,7 +192,7 @@ function queryDBA($conn, $sql){ //to modify
                 echo "No records matching your query were found.";
             }
             
-           
+            
             
         } else if (strcmp($keyword, "DELETE") == 0){
             echo "Record has been successfully deleted";

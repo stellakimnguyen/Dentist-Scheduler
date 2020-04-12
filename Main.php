@@ -15,7 +15,7 @@
 
 <body>
         <?php
-        include 'queries.php';
+        include 'queries.php'; // only needed tag to connect queries
         ?>
   <script src="js/scripts.js"></script>
  
