@@ -7,6 +7,8 @@ if(isset($_POST['button1'])) {
     // Create connection
     $conn = openConnection();
     
+
+    //TODO: SWITCH DEPENDING ON THE RESULTS
     getAllAppointment ($conn);
     
     //close connection
@@ -25,6 +27,8 @@ if(isset($_POST['button1'])) {
         }
     }
 */
+
+//QUERIES USED FOR PART 2
 
 function addNewPatients($conn, $name){
     
@@ -170,17 +174,42 @@ function getAllAppointment($conn){
     return $tempArr;
 }
 
-
-
 function queryDBA($conn, $sql){//to modify
+    $arr = explode(' ',trim($sql));
+    $keyword = $arr[0];
+    if($result = mysqli_query($conn, $sql)){
+        if (strcmp($keyword, "SELECT") == 0){
+            if(mysqli_num_rows($result) > 0){
+            
 
-    if (mysqli_query($conn, $sql)){
-        echo "Query passed successfully";
-    }else{
-        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+                while($row = mysqli_fetch_array($result)){
+                    array_push($tempArr, $row);
+                    
+                }
+                mysqli_free_result($result);
+            }else{
+                echo "No records matching your query were found.";
+            }
+            
+           
+            
+        } else if (strcmp($keyword, "DELETE") == 0){
+            echo "Record has been successfully deleted";
+        }else if (strcmp($keyword, "INSERT") == 0){
+            echo "Record has been successfully added";
+        }else if (strcmp($keyword, "UPDATE") == 0){
+            echo "Record has been successfully updated";
+        }
+
+        
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
+
 }
+
+//PART 1 QUERIES
 
 function retrieveAllDentists($conn){
 
