@@ -253,7 +253,7 @@ function computePreview(specifics, selected) {
         case "dentist":
         case "clinic":
             poolValue = getOptionText(selected);
-            break;
+            break; 
         case "appointment":
             poolValue = getOptionText(selected);
             dateValue = "appointed date";
@@ -271,5 +271,27 @@ function computePreview(specifics, selected) {
 }
 
 function sendRequest() {
+    var messageToSend;
+    
+    if (type.value !== "appointments") {
+        var typeToSend;
+        switch(type.value) {
+            case "dentists":
+                typeToSend = "retriveAllDentists";
+                break;
+            case "missed appointments":
+                typeToSend = "getMissedAppointmentsForAll";
+                break;
+            case "treatments":
+                typeToSend = ["getTreatmentDetailForAppointment", poolValue];
+                break;
+                // TO DO: Consider AID
+            case "unpaid bills":
+                typeToSend = "getUnpaidBills";
+                break;
+            }
+        messageToSend = [typeToSend];
+    }
     console.log(requestToSend);
+    console.log(messageToSend);
 }
