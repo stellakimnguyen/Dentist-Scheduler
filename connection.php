@@ -1,23 +1,27 @@
 <?php
 
+function openConnection(){
 
+    $servername = "localhost:3306";
+    $database = "mainproject";
+    $username = "projectuser";
+    $password = "projectuser353";
 
-$servername = "localhost:3306";
-$database = "mainproject";
-$username = "projectuser";
-$password = "projectuser353";
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password, $database);
 
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $database);
+    // Check connection
 
-// Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    echo "Connected successfully";
+
+    return $conn;
 }
-
-echo "Connected successfully";
-
-
+function closeConnection($conn){
+    mysqli_close($conn);
+}
 //mysqli_close($conn);
 ?>

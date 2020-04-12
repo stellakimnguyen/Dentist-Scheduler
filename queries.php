@@ -1,15 +1,21 @@
-<?php
-        
+<?php 
+    include 'connection.php';
 //here we will add the functions
 
-if(isset($_POST['button1'])) { 
+if(isset($_POST['button1'])) { // isset gets button click of button with name button1 (maybe id?)
 
-    //$beginning = "'2020-4-09 00:00:00'";
-    //$end = "'2020-4-09 23:59:59'";
-    //$pid = 3;
-    deleteAppointment (11);
+    // Create connection
+    $conn = openConnection();
+    
+
+    //TODO: SWITCH DEPENDING ON THE RESULTS
+    getAllAppointment ($conn);
+    
+    //close connection
+    closeConnection($conn);
 } 
 
+// TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
 /*
  if (isset($_POST['action'])) {
         switch ($_POST['action']) {
@@ -23,15 +29,10 @@ if(isset($_POST['button1'])) {
     }
 */
 
-function addNewPatients($name){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
+//QUERIES USED FOR PART 2
 
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
+function addNewPatients($conn, $name){
+    
     $sql = "INSERT INTO patient (pid, name) VALUES (6, '" . $name . "');";
 
     if (mysqli_query($conn, $sql)){
@@ -40,40 +41,24 @@ function addNewPatients($name){
         echo "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
 }
 
-function createNewAppointment($wid, $pid, $cid, $date){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-    $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . ",'" . $date . "');";
-
+function createNewAppointment($conn, $wid, $pid, $cid, $date){
+    
+    if (strlen($wid) == 0){
+        $sql = "INSERT INTO appointment (pid,cid,date_time) VALUES (" . $pid . ", " . $cid . ",'" . $date . "');";
+    }else{
+        $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . ",'" . $date . "');";
+    }
     if (mysqli_query($conn, $sql)){
         echo "New record created successfully";
     }else{
         echo "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-    //return $result;
 }
 
-function selectAppointment($aid){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function selectAppointment($conn, $aid){
 
     $sql = "SELECT * FROM appointment WHERE aid = " . $aid . ";";
 
@@ -81,20 +66,12 @@ function selectAppointment($aid){
 
     //echo $result['wid'] . " - " . $result['pid'] . " - " . $result['cid'] . " - " . $result['status'] . " - " . $result['date_time'];
 
-    mysqli_close($conn);
 
     return $result;
 
 }
 
-function updateAppointment ($aid, $wid, $pid, $cid, $status, $date_time){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function updateAppointment ($conn, $aid, $wid, $pid, $cid, $status, $date_time){
 
     $sql = "UPDATE appointment set wid = " . $wid . ", pid = " . $pid . ", cid = " . $cid . ", status = '" . $status . "', date_time = '" . $date_time . "' WHERE aid = " . $aid . ";";
 
@@ -104,17 +81,12 @@ function updateAppointment ($aid, $wid, $pid, $cid, $status, $date_time){
         echo "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
 }
 
-function deleteAppointment($aid){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+function deleteAppointment($conn, $aid){
+    
+    $sql = "DELETE FROM treatment WHERE aid = " . $aid . ";";
+    mysqli_query($conn, $sql);
 
     $sql = "DELETE FROM appointment WHERE aid = " . $aid . ";";
 
@@ -124,76 +96,20 @@ function deleteAppointment($aid){
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
 }
 
-function getAllPatients(){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
+function getAllPatients($conn){
+    $tempArr = array();
+    $sql = "SELECT * FROM patient;"; 
 
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-    $sql = "SELECT * FROM patient;";
-    $result = mysqli_query($conn, $sql); 
-
-    return mysqli_fetch_array($result); // value = ['pid'], name = ['name']
-
-    mysqli_close($conn);
-
-    
-}
-
-function queryDBA($sql){
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-    if (mysqli_query($conn, $sql)){
-        echo "Query passed successfully";
-    }else{
-        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
-    }
-
-    mysqli_close($conn);
-
-}
-
-function retrieveAllDentists(){
-    
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-
-    $sql = "SELECT * FROM dentist";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>wid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>name</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['name'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
+                
             }
-            echo "</table>";
-            // Free result set
+           
             mysqli_free_result($result);
         } else{
             echo "No records matching your query were found.";
@@ -202,51 +118,147 @@ function retrieveAllDentists(){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    return mysqli_fetch_array($result);
+    return $tempArr;
+}
 
-    mysqli_close($conn);
-    
+function getAllClinics($conn){
+    $tempArr = array();
+    $sql = "SELECT * FROM clinic;"; 
+
+    if($result = mysqli_query($conn, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            
+            while($row = mysqli_fetch_array($result)){
+                array_push($tempArr, $row);
+                
+            }
+           
+            mysqli_free_result($result);
+        } else{
+            echo "No records matching your query were found.";
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        echo $tempArr[$i]['cid'] . " x---x " . $tempArr[$i]['name'] . " x---x " . $tempArr[$i]['address'] . "<br>";
+    } // access array that is returned
+
+    return $tempArr;
+}
+
+function getAllAppointment($conn){
+    $tempArr = array();
+    $sql = "SELECT * FROM appointment;"; 
+
+    if($result = mysqli_query($conn, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            
+            while($row = mysqli_fetch_array($result)){
+                array_push($tempArr, $row);
+                
+            }
+           
+            mysqli_free_result($result);
+        } else{
+            echo "No records matching your query were found.";
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        echo $tempArr[$i]['aid'] . " x---x " . $tempArr[$i]['date_time'] . " x---x " . $tempArr[$i]['status'] . "<br>";
+    } // access array that is returned
+
+    return $tempArr;
+}
+
+function queryDBA($conn, $sql){ //to modify
+    $tempArr = array();
+    $arr = explode(' ',trim($sql));
+    $keyword = $arr[0];
+    if($result = mysqli_query($conn, $sql)){
+        if (strcmp($keyword, "SELECT") == 0){
+            if(mysqli_num_rows($result) > 0){
+            
+
+                while($row = mysqli_fetch_array($result)){
+                    array_push($tempArr, $row);
+                    
+                }
+                mysqli_free_result($result);
+            } else {
+                echo "No records matching your query were found.";
+            }
+            
+           return $tempArr;
+            
+        } else if (strcmp($keyword, "DELETE") == 0){
+            echo "Record has been successfully deleted";
+        }else if (strcmp($keyword, "INSERT") == 0){
+            echo "Record has been successfully added";
+        }else if (strcmp($keyword, "UPDATE") == 0){
+            echo "Record has been successfully updated";
+        }else{
+            echo "Query run successfully.";
+        }
+
+        
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+
+}
+
+//PART 1 QUERIES
+
+function retrieveAllDentists($conn){
+
+    $tempArr = array();
+
+    $sql = "SELECT * FROM dentist";
+    if($result = mysqli_query($conn, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            
+            while($row = mysqli_fetch_array($result)){
+                array_push($tempArr, $row);
+                
+            }
+           
+            mysqli_free_result($result);
+        } else{
+            echo "No records matching your query were found.";
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        echo $tempArr[$i]['wid'] . " xx " . $tempArr[$i]['name'] . " xx " . $tempArr[$i]['cid'] . "<br>";
+    }
+
+    return $tempArr;
+
 }
 
 
-function getAppointmentsForDentistForAWeek($wid, $beginning, $end){
+function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){  
 
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-    
+    $tempArr = array();
 
     $sql = "SELECT * 
     FROM appointment
     WHERE wid = " . $wid . " AND date_time BETWEEN '" . $beginning . "' AND '" . $end . "';";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>status</th>";
-                    echo "<th>date_time</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                    echo "<td>" . $row['date_time'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -256,50 +268,22 @@ function getAppointmentsForDentistForAWeek($wid, $beginning, $end){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-    return $row;
+    return $tempArr;
 
 }
 
-function getAppointmentsForClinicForADay($cid, $beginning, $end){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
-    
-
+function getAppointmentsForClinicForADay($conn, $cid, $beginning, $end){
+    $tempArr = array();
     $sql = "SELECT * 
     FROM appointment
     WHERE cid = " . $cid . " AND date_time BETWEEN '" . $beginning . "' AND '" . $end . "';";
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>status</th>";
-                    echo "<th>date_time</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                    echo "<td>" . $row['date_time'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -309,21 +293,12 @@ function getAppointmentsForClinicForADay($cid, $beginning, $end){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-
+    return $tempArr;
 }
 
-function getAppointmentsForPatient($pid){
+function getAppointmentsForPatient($conn, $pid){
 
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+    $tempArr = array();
 
     $sql = "SELECT * 
     FROM appointment
@@ -331,26 +306,11 @@ function getAppointmentsForPatient($pid){
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>cid</th>";
-                    echo "<th>status</th>";
-                    echo "<th>date_time</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                    echo "<td>" . $row['date_time'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -360,22 +320,11 @@ function getAppointmentsForPatient($pid){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    mysqli_close($conn);
-
-
+    return $tempArr;
 }
 
-function getMissedAppointmentForAll(){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
+function getMissedAppointmentForAll($conn){
+    $tempArr = array();
     $sql = "SELECT pid, COUNT(status)
     From appointment
     WHERE status = 'missed'
@@ -383,18 +332,11 @@ function getMissedAppointmentForAll(){
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>pid</th>";
-                    echo "<th>number of missed apt</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['COUNT(status)'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -403,23 +345,12 @@ function getMissedAppointmentForAll(){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
-
-    mysqli_close($conn);
-
+    return $tempArr;
 
 }
 
-function getTreatmentDetailForAppointment($aid){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
+function getTreatmentDetailForAppointment($conn, $aid){
+    $tempArry = array();
     $sql = "SELECT *
     From treatment
     WHERE aid = " . $aid . ";
@@ -427,24 +358,11 @@ function getTreatmentDetailForAppointment($aid){
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>aid</th>";
-                    echo "<th>wid</th>";
-                    echo "<th>pid</th>";
-                    echo "<th>tid</th>";
-                    echo "<th>cid</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['aid'] . "</td>";
-                    echo "<td>" . $row['wid'] . "</td>";
-                    echo "<td>" . $row['pid'] . "</td>";
-                    echo "<td>" . $row['tid'] . "</td>";
-                    echo "<td>" . $row['cid'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -453,43 +371,22 @@ function getTreatmentDetailForAppointment($aid){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
-
-    mysqli_close($conn);
-
-
+    return $tempArr;
 }
 
-function getUnpaidBills(){
-
-
-    $servername = "localhost:3306";
-    $database = "mainproject";
-    $username = "projectuser";
-    $password = "projectuser353";
-
-    // Create connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
-
+function getUnpaidBills($conn){
+    $tempArr = array();
     $sql = "SELECT *
     FROM bill
     WHERE status = 'unpaid'";
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
-            echo "<table>";
-                echo "<tr>";
-                    echo "<th>tid</th>";
-                    echo "<th>cost</th>";
-                    echo "<th>status</th>";
-                echo "</tr>";
+            
             while($row = mysqli_fetch_array($result)){
-                echo "<tr>";
-                    echo "<td>" . $row['tid'] . "</td>";
-                    echo "<td>" . $row['cost'] . "</td>";
-                    echo "<td>" . $row['status'] . "</td>";
-                echo "</tr>";
+                array_push($tempArr, $row);
             }
-            echo "</table>";
+            
             // Free result set
             mysqli_free_result($result);
         } else{
@@ -498,10 +395,7 @@ function getUnpaidBills(){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
-
-    mysqli_close($conn);
-
-
+    return $tempArr;
 }
 
 ?>
