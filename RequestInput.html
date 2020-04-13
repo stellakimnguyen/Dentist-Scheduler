@@ -105,7 +105,10 @@
       <div class="requestPreview">
         <label>Request Preview: </label>
         <div id="stringRequest">Preview will be here</div>
-        <div class="sendButton" onclick=sendRequest() />
+        <form method="post" class="send-container">
+          <div class="sendButton" onclick=sendRequest() />
+          <input type="submit" name="sendRequestInputBtn" >
+        </form>
       </div>
     </div><!-- End of content -->
   </div> <!-- End of Container -->

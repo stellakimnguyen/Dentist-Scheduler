@@ -1,87 +1,4 @@
-// TEST VALUES
-// const patients = [
-//     {
-//         "value": "1",
-//         "text": "Maryam Benadada",
-//     },
-//     {
-//         "value": "2",
-//         "text": "Stella Nguyen",
-//     },
-//     {
-//         "value": "3",
-//         "text": "Finn Davidson",
-//     },
-// ];
-// const dentists = [
-//     {
-//         value: "1",
-//         text: 'Kim Trang'
-//     },
-//     {
-//         value: "2",
-//         text: 'Manh Cuong'
-//     },
-//     {
-//         value: "3",
-//         text: 'Kim Chi'
-//     },
-//     {
-//         value: "4",
-//         text: 'Giao Trinh'
-//     },
-//     {
-//         value: "5",
-//         text: 'Bao Nguyen'
-//     },
-// ];
-// const clinics = [
-//     {
-//         value: "1",
-//         text: "Complexe Desjardins"
-//     },
-//     {
-//         value: "2",
-//         text: "Côte-des-Neiges"
-//     },
-//     {
-//         value: "3",
-//         text: "Rockland Center"
-//     },
-//     {
-//         value: "4",
-//         text: "Le Riverain"
-//     },
-// ];
-// const appointments = [
-//     {
-//         value: "1",
-//         text: "Appointment 1"
-//     },
-//     {
-//         value: "2",
-//         text: "Appointment 2"
-//     },
-//     {
-//         value: "3",
-//         text: "Appointment 3"
-//     },
-//     {
-//         value: "4",
-//         text: "Appointment 4"
-//     },
-//     {
-//         value: "5",
-//         text: "Appointment 5"
-//     },
-//     {
-//         value: "6",
-//         text: "Appointment 6"
-//     },
-// ];
-
 // CONSTANTS
-// var patients;
 var dentists;
 var clinics;
 var appointments;
@@ -111,6 +28,8 @@ var firstDayOfWeek;
 var lastDayOfWeek;
 var chosenPool;
 
+var messageToSend;
+
 function optionExists( optionToCheck, selectElement) { // determines if option already exists in select tag
     var optionExists = false,
         optionsLength = selectElement.length;
@@ -130,8 +49,6 @@ function optionExists( optionToCheck, selectElement) { // determines if option a
 
 function addPoolElement(dbResults, pool) { // add options from database to pool
     var optionsList = document.getElementById(pool).options;
-
-    console.log(dbResults);
 
     dbResults.forEach(option => {
         if (!optionExists(option, document.getElementById(pool))) {
@@ -286,13 +203,12 @@ function computePreview(specifics, selected) {
 }
 
 function sendRequest() {
-    var messageToSend;
     var toSend;
     
     if (type.value !== "appointments") {
         switch(type.value) {
             case "dentists":
-                toSend = ["retrieveAllDentists"];
+                toSend = ["getAllDentistsFromAllClinics"];
                 break;
             case "missed appointments":
                 toSend = ["getMissedAppointmentsForAll"];
@@ -322,6 +238,10 @@ function sendRequest() {
     
     messageToSend = toSend;
     console.log(messageToSend);
+    console.log('we are here');
+
+    document.cookie = `name=${JSON.stringify(messageToSend)}`;
+    return messageToSend;
 }
 
 function setSpecificsArrays(specifics, array) {

@@ -16,15 +16,69 @@ if(isset($_POST['button1'])) { // isset gets button click of button with name bu
     closeConnection($conn);
 }
 
-$test = "";
+echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Awaiting query submission" . '"; }</script>';
+
 $receivingResult = "";
 
+$conn = openConnection();
+
 if (isset($_POST['sendRequestInputBtn'])) {
-    if ($test !== "") {
-        echo $test;
-    } else {
-        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Awaiting query submission" . '"; }</script>';
+    $parameters = json_decode($_COOKIE['name']);
+    $resultToDisplay = "";
+
+    echo $parameters[0] . "<br>";
+
+    switch($parameters[0]) {
+        case "getAllDentistsFromAllClinics":
+            $temp = getAllDentistsFromAllClinics($conn);
+            for ($i = 0; $i < sizeof($temp); $i++){
+                $resultToDisplay .= $temp[$i]['wid'] . "\t " . $temp[$i]['name'] . "\t" . $temp[$i]['cid'] . "<br>";
+            }
+            break;
+        case "getAppointmentsForDentistForAWeek":
+            $temp = getAppointmentsForDentistForAWeek($conn, $parameters[1], $parameters[2], $parameters[3]);
+            for ($i = 0; $i < sizeof($temp); $i++){
+                $resultToDisplay .="Appointment " . $temp[$i]['aid']. "<br>";
+            }
+            break;
+        case "getAppointmentsForClinicForADay":
+            $temp = getAppointmentsForClinicForADay($conn, $parameters[1], $parameters[2], $parameters[3]);
+            for ($i = 0; $i < sizeof($temp); $i++){
+                $resultToDisplay .= "Appointment " . $temp[$i]['aid']. "<br>";
+            }
+            break;
+        case "getAppointmentsForPatient":
+            $temp = getAppointmentsForPatient($conn, $parameters[1]);
+            for ($i = 0; $i < sizeof($temp); $i++){
+                $resultToDisplay .= "Appointment " . $temp[$i]['aid']. "<br>";
+            }
+            break;
+        case "getMissedAppointmentsForAll":
+            $temp = getMissedAppointmentForAll($conn);
+            for ($i = 0; $i < sizeof($temp); $i++){
+                $resultToDisplay .= "Patient " . $temp[$i]['pid']. "<br>"; //how to get count
+            }
+            break;
+        //NOT WORKING
+        case "getTreatmentDetailForAppointment":
+            $temp = getTreatmentDetailForAppointment($conn, $parameters[1]);
+            for ($i = 0; $i < sizeof($temp); $i++){
+                $resultToDisplay .= "Treatment " . $temp[$i]['tid']. "<br>"; //how to get count
+            }
+            break;
+        case "getUnpaidBills":
+            $temp = getUnpaidBills($conn);
+            for ($i = 0; $i < sizeof($temp); $i++){
+                $resultToDisplay .= "Cost " . $temp[$i]['cost']. "<br>"; //how to get count
+            }
+            break;
+            
+        default:
+            $resultToDisplay = "Awaiting query submission";           
     }
+
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $resultToDisplay . '"; }</script>';
+
 }
 
 // TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
@@ -40,8 +94,6 @@ if (isset($_POST['sendRequestInputBtn'])) {
         }
     }
 */
-
-$conn = openConnection();
 
 // PHP VARIABLES FOR JS
 $allPatients = getAllPatients($conn); 
@@ -297,6 +349,33 @@ function retrieveAllDentists($conn){
 
 }
 
+function getAllDentistsFromAllClinics($conn) {
+    $tempArr = array();
+
+    $sql = "SELECT * FROM dentist";
+    if($result = mysqli_query($conn, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            
+            while($row = mysqli_fetch_array($result)){
+                array_push($tempArr, $row);
+                
+            }
+           
+            mysqli_free_result($result);
+        } else{
+            echo "No records matching your query were found.";
+        }
+    } else{
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    // for ($i = 0; $i< sizeof($tempArr); $i++){
+    //     echo $tempArr[$i]['wid'] . " xx " . $tempArr[$i]['name'] . " xx " . $tempArr[$i]['cid'] . "<br>";
+    // }
+
+    return $tempArr;
+}
+
 
 function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){  
 
@@ -317,8 +396,12 @@ function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){
         } else{
             echo "No records matching your query were found.";
         }
-    } else{
+    } else {
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    for ($i = 0; $i < sizeof($tempArr); $i++){
+        echo $tempArr[$i]['aid'];
     }
 
     return $tempArr;

@@ -8,7 +8,10 @@
     <div class="sql-container">
         <label>Enter SQL Query: </label>
         <input type="text" id="query">
-        <div class="sendButton" onclick=sendQuery()></div>
+        <form method="post" class="send-container">
+            <div class="sendButton" onclick=sendQuery()></div>
+            <input type="submit" name="sendQueryBtn">
+        </form>
     </div> <!-- End of Container -->
     
 
