@@ -5,14 +5,26 @@
 if(isset($_POST['button1'])) { // isset gets button click of button with name button1 (maybe id?)
 
     // Create connection
-    //$conn = openConnection();
-    
+    $conn = openConnection();
+
+    echo "HELLO";
 
     //TODO: SWITCH DEPENDING ON THE RESULTS
     getAllAppointment ($conn);
     
     //close connection
     closeConnection($conn);
+}
+
+$test = "";
+$receivingResult = "";
+
+if (isset($_POST['sendRequestInputBtn'])) {
+    if ($test !== "") {
+        echo $test;
+    } else {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Awaiting query submission" . '"; }</script>';
+    }
 }
 
 // TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
@@ -446,5 +458,4 @@ function getUnpaidBills($conn){
     setSpecificsArrays('appointments', '<?php echo json_encode($allAppointments); ?>');
     setSpecificsArrays('dentists','<?php echo json_encode($allDentists); ?>');
     setSpecificsArrays('clinics', '<?php echo json_encode($allClinics); ?>');
-
 </script>
