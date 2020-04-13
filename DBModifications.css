@@ -72,3 +72,25 @@ input {
 .modAptModifs > div > select {
     width: 60px;
 }
+
+.send-container {
+    position: relative;
+    transition: 250ms;
+}
+
+.send-container:hover {
+    transform: scale(1.2);
+}
+
+.send-container > input {
+    position: absolute;
+    width: 15px;
+    padding-left: 0;
+    top: -14px;
+    opacity: 0;
+}
+
+.send-container > input:hover {
+    top: -15px;
+    left: -3px;
+}

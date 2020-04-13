@@ -26,7 +26,10 @@
                     <label>Last Name: </label>
                     <input id="newPatientLastName" type="text">
                 </div>
-                <div class="sendButton" onclick=addNewPatient()></div>
+                <form method="post" class="send-container">
+                    <div class="sendButton" onclick=addNewPatient()></div>
+                    <input type="submit" name="sendModifsAddPatientBtn">
+                </form>
             </div>
             <div id="schedApt" class="schedApt hidden">
                 <div>
@@ -51,7 +54,10 @@
                     <label>Date: </label>
                     <input id="schedDate" type="date">
                 </div>
-                <div class="sendButton" onclick=scheduleNewAppointment()></div>
+                <form method="post" class="send-container">
+                    <div class="sendButton" onclick=scheduleNewAppointment()></div>
+                    <input type="submit" name="sendModifsNewSchedBtn">
+                </form>
             </div>
             <div id="modApt" class="modApt hidden">
                 <div>
@@ -92,7 +98,10 @@
                         <label>Date: </label>
                         <input type="date" id="modDate">
                     </div>
-                    <div class="sendButton" onclick=modifyExistingAppointment()></div>
+                    <form method="post" class="send-container">
+                        <div class="sendButton" onclick=modifyExistingAppointment()></div>
+                        <input type="submit" name="sendModifsBtn">
+                    </form>
                 </div>
 
             </div>
@@ -101,7 +110,10 @@
                 <select id="delAID" onchange=triggerModifSection()>
                     <option value="" selected disabled hidden></option>
                 </select>
-                <div class="sendButton" onclick=deleteExistingAppointment()></div>
+                <form method="post" class="send-container">
+                    <div class="sendButton" onclick=deleteExistingAppointment()></div>
+                    <input type="submit" name="sendModifsBtn">
+                </form>
             </div>
         </div>
     </div> <!-- End of Container -->

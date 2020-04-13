@@ -114,6 +114,7 @@ function addNewPatient() {
     var lastName = document.getElementById("newPatientLastName").value;
     var messageToSend = ['addNewPatients', `${firstName} ${lastName}`];
     console.log(messageToSend);
+    document.cookie = `newPatient=${JSON.stringify(messageToSend)}`;
 }
 
 function scheduleNewAppointment() {
@@ -122,6 +123,7 @@ function scheduleNewAppointment() {
     var date = document.getElementById("schedDate").value;
     var clinic = document.getElementById("schedCID").value;
     var messageToSend = ['createNewAppointment', worker, patient, clinic, date];
+    document.cookie = `newAppointment=${JSON.stringify(messageToSend)}`;
     console.log(messageToSend);
 }
 
@@ -133,11 +135,13 @@ function modifyExistingAppointment() {
     var date = document.getElementById("modDate").value;
     var clinic = document.getElementById("modCID").value;
     var messageToSend = ['updateAppointment', worker, patient, clinic, status, date];
+    document.cookie = `name=${JSON.stringify(messageToSend)}`;
     console.log(messageToSend);
 }
 
 function deleteExistingAppointment() {
     var appointment = document.getElementById("delAID").value;
     var messageToSend = ["deleteAppointment", appointment];
+    document.cookie = `name=${JSON.stringify(messageToSend)}`;
     console.log(messageToSend);
 }

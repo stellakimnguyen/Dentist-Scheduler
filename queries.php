@@ -26,8 +26,6 @@ if (isset($_POST['sendRequestInputBtn'])) {
     $parameters = json_decode($_COOKIE['name']);
     $resultToDisplay = "";
 
-    echo $parameters[0] . "<br>";
-
     switch($parameters[0]) {
         case "getAllDentistsFromAllClinics":
             $temp = getAllDentistsFromAllClinics($conn);
@@ -81,6 +79,30 @@ if (isset($_POST['sendRequestInputBtn'])) {
 
 }
 
+if (isset($_POST['sendModifsAddPatientBtn'])) {
+    $parameters = json_decode($_COOKIE['newPatient']);
+    $resultToDisplay = "";
+
+    // echo "we are here";
+    // echo $parameters[0] . "<br>";
+    // echo $parameters[1] . "<br>";
+
+    addNewPatients($conn, $parameters[1]);
+
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added patient " . $parameters[1] . '"; }</script>';
+}
+
+if (isset($_POST['sendModifsNewSchedBtn'])) {
+    $parameters = json_decode($_COOKIE['newAppointment']);
+    $resultToDisplay = "";
+
+    // echo "we are here";
+    // echo $parameters[0] . "<br>";
+    // echo $parameters[1] . "<br>";
+
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added appointment " . $parameters[1] . '"; }</script>';
+}
+
 // TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
 /*
  if (isset($_POST['action'])) {
@@ -110,7 +132,7 @@ class jsElement {
 
 function addNewPatients($conn, $name){
     
-    $sql = "INSERT INTO patient (pid, name) VALUES (6, '" . $name . "');";
+    $sql = "INSERT INTO patient (pid, name) VALUES (7, '" . $name . "');";
 
     if (mysqli_query($conn, $sql)){
         echo "New record created successfully";
@@ -400,9 +422,9 @@ function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    for ($i = 0; $i < sizeof($tempArr); $i++){
-        echo $tempArr[$i]['aid'];
-    }
+    // for ($i = 0; $i < sizeof($tempArr); $i++){
+    //     echo $tempArr[$i]['aid'];
+    // }
 
     return $tempArr;
 
