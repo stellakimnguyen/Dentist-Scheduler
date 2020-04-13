@@ -5,7 +5,7 @@
 if(isset($_POST['button1'])) { // isset gets button click of button with name button1 (maybe id?)
 
     // Create connection
-    $conn = openConnection();
+    //$conn = openConnection();
     
 
     //TODO: SWITCH DEPENDING ON THE RESULTS
@@ -13,7 +13,7 @@ if(isset($_POST['button1'])) { // isset gets button click of button with name bu
     
     //close connection
     closeConnection($conn);
-} 
+}
 
 // TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
 /*
@@ -28,6 +28,19 @@ if(isset($_POST['button1'])) { // isset gets button click of button with name bu
         }
     }
 */
+
+$conn = openConnection();
+
+// PHP VARIABLES FOR JS
+$allPatients = getAllPatients($conn); 
+$allDentists = retrieveAllDentists($conn); // check
+$allAppointments = getAllAppointment($conn);
+$allClinics = getAllClinics($conn);
+
+class jsElement {
+    public $value;
+    public $text;
+}
 
 //QUERIES USED FOR PART 2
 
@@ -100,6 +113,7 @@ function deleteAppointment($conn, $aid){
 
 function getAllPatients($conn){
     $tempArr = array();
+    $jsArray = array();
     $sql = "SELECT * FROM patient;"; 
 
     if($result = mysqli_query($conn, $sql)){
@@ -107,7 +121,6 @@ function getAllPatients($conn){
             
             while($row = mysqli_fetch_array($result)){
                 array_push($tempArr, $row);
-                
             }
            
             mysqli_free_result($result);
@@ -118,11 +131,21 @@ function getAllPatients($conn){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    return $tempArr;
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        // echo $tempArr[$i]['pid'] . $tempArr[$i]['name'];
+
+        ${"patient" . $i} = new jsElement();
+        ${"patient" . $i} -> value = $tempArr[$i]['pid'];
+        ${"patient" . $i} -> text = $tempArr[$i]['name'];
+        $jsArray[$i] = ${"patient" . $i};
+    }
+
+    return $jsArray;
 }
 
 function getAllClinics($conn){
     $tempArr = array();
+    $jsArray = array();
     $sql = "SELECT * FROM clinic;"; 
 
     if($result = mysqli_query($conn, $sql)){
@@ -142,22 +165,27 @@ function getAllClinics($conn){
     }
 
     for ($i = 0; $i< sizeof($tempArr); $i++){
-        echo $tempArr[$i]['cid'] . " x---x " . $tempArr[$i]['name'] . " x---x " . $tempArr[$i]['address'] . "<br>";
+        // echo $tempArr[$i]['cid'] . " x---x " . $tempArr[$i]['name'] . " x---x " . $tempArr[$i]['address'] . "<br>";
+    
+        ${"clinic" . $i} = new jsElement();
+        ${"clinic" . $i} -> value = $tempArr[$i]['cid'];
+        ${"clinic" . $i} -> text = $tempArr[$i]['name'];
+        $jsArray[$i] = ${"clinic" . $i};
     } // access array that is returned
 
-    return $tempArr;
+    return $jsArray;
 }
 
 function getAllAppointment($conn){
     $tempArr = array();
-    $sql = "SELECT * FROM appointment;"; 
+    $jsArray = array();
+    $sql = "SELECT aid FROM appointment;"; 
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){
             
             while($row = mysqli_fetch_array($result)){
                 array_push($tempArr, $row);
-                
             }
            
             mysqli_free_result($result);
@@ -168,11 +196,18 @@ function getAllAppointment($conn){
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
-    for ($i = 0; $i< sizeof($tempArr); $i++){
-        echo $tempArr[$i]['aid'] . " x---x " . $tempArr[$i]['date_time'] . " x---x " . $tempArr[$i]['status'] . "<br>";
-    } // access array that is returned
+    // for ($i = 0; $i< sizeof($tempArr); $i++){
+    //     echo $tempArr[$i]['aid'] . " x---x " . $tempArr[$i]['date_time'] . " x---x " . $tempArr[$i]['status'] . "<br>";
+    // } // access array that is returned
 
-    return $tempArr;
+    for ($i = 0; $i< sizeof($tempArr); $i++){
+        ${"appointment" . $i} = new jsElement();
+        ${"appointment" . $i} -> value = $tempArr[$i]['aid'];
+        ${"appointment" . $i} -> text = 'Appointment ' . $tempArr[$i]['aid'];
+        $jsArray[$i] = ${"appointment" . $i};
+    }
+
+    return $jsArray;
 }
 
 function queryDBA($conn, $sql){ //to modify
@@ -218,6 +253,7 @@ function queryDBA($conn, $sql){ //to modify
 function retrieveAllDentists($conn){
 
     $tempArr = array();
+    $jsArray = array();
 
     $sql = "SELECT * FROM dentist";
     if($result = mysqli_query($conn, $sql)){
@@ -237,10 +273,15 @@ function retrieveAllDentists($conn){
     }
 
     for ($i = 0; $i< sizeof($tempArr); $i++){
-        echo $tempArr[$i]['wid'] . " xx " . $tempArr[$i]['name'] . " xx " . $tempArr[$i]['cid'] . "<br>";
+        // echo $tempArr[$i]['wid'] . $tempArr[$i]['name'];
+        ${"dentist" . $i} = new jsElement();
+        ${"dentist" . $i} -> value = $tempArr[$i]['wid'];
+        ${"dentist" . $i} -> text = $tempArr[$i]['name'];
+
+        $jsArray[$i] = ${"dentist" . $i};
     }
 
-    return $tempArr;
+    return $jsArray;
 
 }
 
@@ -400,3 +441,10 @@ function getUnpaidBills($conn){
 
 ?>
 
+<script type="text/javascript">
+    setSpecificsArrays('patients', '<?php echo json_encode($allPatients); ?>');
+    setSpecificsArrays('appointments', '<?php echo json_encode($allAppointments); ?>');
+    setSpecificsArrays('dentists','<?php echo json_encode($allDentists); ?>');
+    setSpecificsArrays('clinics', '<?php echo json_encode($allClinics); ?>');
+
+</script>

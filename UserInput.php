@@ -14,10 +14,15 @@
 
 <body>
     <div class="main-container">
-      <?php include 'RequestInput.html';?>
-      <?php include 'DBModifications.html';?>
-      <?php include 'SQLQuery.html';?>
-      <?php include 'RequestResult.html';?>
+      <?php 
+        include 'RequestInput.html';
+        include 'DBModifications.html';
+        include 'SQLQuery.html';
+        include 'RequestResult.html';
+      ?>
+      <?php
+        include 'queries.php'; // only needed tag to connect queries
+      ?>
     </div>
     
 </body>

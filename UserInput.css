@@ -11,3 +11,8 @@ body {
     height: 100%;
     width: 100%;
 }
+
+#connection-status {
+    text-align: center;
+    margin-top: 40px;
+}

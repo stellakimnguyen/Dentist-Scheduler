@@ -1,86 +1,91 @@
 // TEST VALUES
-const patients = [
-    {
-        value: "1",
-        text: "Maryam Benadada",
-    },
-    {
-        value: "2",
-        text: "Stella Nguyen",
-    },
-    {
-        value: "3",
-        text: "Finn Davidson",
-    },
-];
-const dentists = [
-    {
-        value: "1",
-        text: 'Kim Trang'
-    },
-    {
-        value: "2",
-        text: 'Manh Cuong'
-    },
-    {
-        value: "3",
-        text: 'Kim Chi'
-    },
-    {
-        value: "4",
-        text: 'Giao Trinh'
-    },
-    {
-        value: "5",
-        text: 'Bao Nguyen'
-    },
-];
-const clinics = [
-    {
-        value: "1",
-        text: "Complexe Desjardins"
-    },
-    {
-        value: "2",
-        text: "Côte-des-Neiges"
-    },
-    {
-        value: "3",
-        text: "Rockland Center"
-    },
-    {
-        value: "4",
-        text: "Le Riverain"
-    },
-];
-const appointments = [
-    {
-        value: "1",
-        text: "Appointment 1"
-    },
-    {
-        value: "2",
-        text: "Appointment 2"
-    },
-    {
-        value: "3",
-        text: "Appointment 3"
-    },
-    {
-        value: "4",
-        text: "Appointment 4"
-    },
-    {
-        value: "5",
-        text: "Appointment 5"
-    },
-    {
-        value: "6",
-        text: "Appointment 6"
-    },
-];
+// const patients = [
+//     {
+//         "value": "1",
+//         "text": "Maryam Benadada",
+//     },
+//     {
+//         "value": "2",
+//         "text": "Stella Nguyen",
+//     },
+//     {
+//         "value": "3",
+//         "text": "Finn Davidson",
+//     },
+// ];
+// const dentists = [
+//     {
+//         value: "1",
+//         text: 'Kim Trang'
+//     },
+//     {
+//         value: "2",
+//         text: 'Manh Cuong'
+//     },
+//     {
+//         value: "3",
+//         text: 'Kim Chi'
+//     },
+//     {
+//         value: "4",
+//         text: 'Giao Trinh'
+//     },
+//     {
+//         value: "5",
+//         text: 'Bao Nguyen'
+//     },
+// ];
+// const clinics = [
+//     {
+//         value: "1",
+//         text: "Complexe Desjardins"
+//     },
+//     {
+//         value: "2",
+//         text: "Côte-des-Neiges"
+//     },
+//     {
+//         value: "3",
+//         text: "Rockland Center"
+//     },
+//     {
+//         value: "4",
+//         text: "Le Riverain"
+//     },
+// ];
+// const appointments = [
+//     {
+//         value: "1",
+//         text: "Appointment 1"
+//     },
+//     {
+//         value: "2",
+//         text: "Appointment 2"
+//     },
+//     {
+//         value: "3",
+//         text: "Appointment 3"
+//     },
+//     {
+//         value: "4",
+//         text: "Appointment 4"
+//     },
+//     {
+//         value: "5",
+//         text: "Appointment 5"
+//     },
+//     {
+//         value: "6",
+//         text: "Appointment 6"
+//     },
+// ];
 
 // CONSTANTS
+// var patients;
+var dentists;
+var clinics;
+var appointments;
+
 const patientSelection = document.getElementById("patientSelection");
 const dentistSelection = document.getElementById("dentistSelection");
 const clinicSelection = document.getElementById("clinicSelection");
@@ -101,8 +106,10 @@ const pool = document.getElementById('pool');
 const date = document.getElementById('date');
 
 // REQUEST VARIABLES
-var userRequest;
-var requestToSend;
+var selectedPoolID;
+var firstDayOfWeek;
+var lastDayOfWeek;
+var chosenPool;
 
 function optionExists( optionToCheck, selectElement) { // determines if option already exists in select tag
     var optionExists = false,
@@ -123,6 +130,8 @@ function optionExists( optionToCheck, selectElement) { // determines if option a
 
 function addPoolElement(dbResults, pool) { // add options from database to pool
     var optionsList = document.getElementById(pool).options;
+
+    console.log(dbResults);
 
     dbResults.forEach(option => {
         if (!optionExists(option, document.getElementById(pool))) {
@@ -229,8 +238,10 @@ function getWeekDates(weekNumber) {
     weekStart = weekStart.toISOString(); // convert to ISO date format
     weekEnd = weekEnd.toISOString();
 
-    return (weekStart.substr(0, weekStart.indexOf('T'))
-        + ' 00:00:00 to ' + weekEnd.substr(0, weekStart.indexOf('T')) + ' 00:00:00'); // return ISO format for SQL
+    firstDayOfWeek = weekStart.substr(0, weekStart.indexOf('T'));
+    lastDayOfWeek = weekEnd.substr(0, weekStart.indexOf('T'));
+
+    return (firstDayOfWeek + " to " + lastDayOfWeek); // return ISO format for SQL
 }
 
 function getOptionText(selectedOption) { // as 'value' is associated with the tuple's ID
@@ -238,6 +249,9 @@ function getOptionText(selectedOption) { // as 'value' is associated with the tu
 }
 
 function computePreview(specifics, selected) {
+    var userRequest;
+    chosenPool = selected;
+    
     if (specifics) { // if *given* was chosen (i.e. asking for specific element)
         numberValue = "";
     } else {
@@ -253,9 +267,11 @@ function computePreview(specifics, selected) {
         case "dentist":
         case "clinic":
             poolValue = getOptionText(selected);
+            selectedPoolID = selected.value;
             break; 
         case "appointment":
             poolValue = getOptionText(selected);
+            selectedPoolID = selected.value;
             dateValue = "appointed date";
             break;
         case "week":
@@ -266,32 +282,61 @@ function computePreview(specifics, selected) {
     }
 
     userRequest = `Get ${infoValue} of all ${typeValue} for ${numberValue} ${poolValue} on ${dateValue}`;
-    requestToSend = [infoValue, typeValue, numberValue, poolValue, dateValue];
     requestPreview.innerHTML = userRequest;
 }
 
 function sendRequest() {
     var messageToSend;
+    var toSend;
     
     if (type.value !== "appointments") {
-        var typeToSend;
         switch(type.value) {
             case "dentists":
-                typeToSend = "retriveAllDentists";
+                toSend = ["retrieveAllDentists"];
                 break;
             case "missed appointments":
-                typeToSend = "getMissedAppointmentsForAll";
+                toSend = ["getMissedAppointmentsForAll"];
                 break;
             case "treatments":
-                typeToSend = ["getTreatmentDetailForAppointment", poolValue];
+                toSend = ["getTreatmentDetailForAppointment", selectedPoolID];
                 break;
                 // TO DO: Consider AID
             case "unpaid bills":
-                typeToSend = "getUnpaidBills";
+                toSend = ["getUnpaidBills"];
                 break;
             }
-        messageToSend = [typeToSend];
+    } else {
+        console.log(pool.value);
+        switch (pool.value) {
+            case "patient":
+                toSend = ["getAppointmentsForPatient", selectedPoolID];
+                break;
+            case "dentist(s)":
+                toSend = ["getAppointmentsForDentistForAWeek", selectedPoolID, firstDayOfWeek, lastDayOfWeek];
+                break;
+            case "clinic(s)":
+                toSend = ["getAppointmentsForClinicForADay", selectedPoolID, `${dayForm.value} 00:00:00`, `${dayForm.value} 23:59:59`];
+                break;
+        }
     }
-    console.log(requestToSend);
+    
+    messageToSend = toSend;
     console.log(messageToSend);
+}
+
+function setSpecificsArrays(specifics, array) {
+    switch (specifics) {
+        case "patients":
+            patients = (JSON.parse(array));
+            break;
+        case "appointments":
+            appointments = JSON.parse(array);
+            break;
+        case "dentists":
+            dentists = (JSON.parse(array));
+            break;
+        case "clinics":
+            clinics = (JSON.parse(array));
+            break;
+    }
 }
