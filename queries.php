@@ -99,8 +99,9 @@ if (isset($_POST['sendModifsNewSchedBtn'])) {
     // echo "we are here";
     // echo $parameters[0] . "<br>";
     // echo $parameters[1] . "<br>";
+    createNewAppointment($conn, $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
 
-    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added appointment " . $parameters[1] . '"; }</script>';
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added new appointment " . '"; }</script>';
 }
 
 // TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
@@ -132,7 +133,7 @@ class jsElement {
 
 function addNewPatients($conn, $name){
     
-    $sql = "INSERT INTO patient (pid, name) VALUES (7, '" . $name . "');";
+    $sql = "INSERT INTO patient (name) VALUES ('" . $name . "');";
 
     if (mysqli_query($conn, $sql)){
         echo "New record created successfully";
