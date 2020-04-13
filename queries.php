@@ -33,7 +33,7 @@ if(isset($_POST['button1'])) { // isset gets button click of button with name bu
 
 function addNewPatients($conn, $name){
     
-    $sql = "INSERT INTO patient (pid, name) VALUES (6, '" . $name . "');";
+    $sql = "INSERT INTO patient (name) VALUES ('" . $name . "');";
 
     if (mysqli_query($conn, $sql)){
         echo "New record created successfully";
