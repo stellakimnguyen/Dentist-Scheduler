@@ -27,9 +27,10 @@
                     <input id="newPatientLastName" type="text">
                 </div>
                 <form method="post" class="send-container">
-                    <div class="sendButton" onclick=addNewPatient()></div>
+                    <div class="sendButton" onclick=addNewPatient() />
                     <input type="submit" name="sendModifsAddPatientBtn">
                 </form>
+                    </div> <!-- closing the sendButton div (little hack!) -->
             </div>
             <div id="schedApt" class="schedApt hidden">
                 <div>
@@ -55,9 +56,10 @@
                     <input id="schedDate" type="date">
                 </div>
                 <form method="post" class="send-container">
-                    <div class="sendButton" onclick=scheduleNewAppointment()></div>
+                    <div class="sendButton" onclick=scheduleNewAppointment() />
                     <input type="submit" name="sendModifsNewSchedBtn">
                 </form>
+                    </div> <!-- closing the sendButton div (little hack!) -->
             </div>
             <div id="modApt" class="modApt hidden">
                 <div>
@@ -99,9 +101,10 @@
                         <input type="date" id="modDate">
                     </div>
                     <form method="post" class="send-container">
-                        <div class="sendButton" onclick=modifyExistingAppointment()></div>
-                        <input type="submit" name="sendModifsBtn">
+                        <div class="sendButton" onclick=modifyExistingAppointment() />
+                        <input type="submit" name="sendModifsModifyAptBtn">
                     </form>
+                        </div> <!-- closing the sendButton div (little hack!) -->
                 </div>
 
             </div>
@@ -111,9 +114,10 @@
                     <option value="" selected disabled hidden></option>
                 </select>
                 <form method="post" class="send-container">
-                    <div class="sendButton" onclick=deleteExistingAppointment()></div>
+                    <div class="sendButton" onclick=deleteExistingAppointment() />
                     <input type="submit" name="sendModifsBtn">
                 </form>
+                </div> <!-- closing the sendButton div (little hack!) -->
             </div>
         </div>
     </div> <!-- End of Container -->

@@ -54,7 +54,7 @@ if (isset($_POST['sendRequestInputBtn'])) {
         case "getMissedAppointmentsForAll":
             $temp = getMissedAppointmentForAll($conn);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .= "Patient " . $temp[$i]['pid']. "<br>"; //how to get count
+                $resultToDisplay .= "Patient " . $temp[$i]['pid'] . " missed " . $temp[$i]['COUNT(status)'] . " appointment(s)" . "<br>";
             }
             break;
         //NOT WORKING
@@ -67,7 +67,7 @@ if (isset($_POST['sendRequestInputBtn'])) {
         case "getUnpaidBills":
             $temp = getUnpaidBills($conn);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .= "Cost " . $temp[$i]['cost']. "<br>"; //how to get count
+                $resultToDisplay .= "Cost " . $temp[$i]['cost']. "<br>"; 
             }
             break;
             
@@ -81,25 +81,27 @@ if (isset($_POST['sendRequestInputBtn'])) {
 
 if (isset($_POST['sendModifsAddPatientBtn'])) {
     $parameters = json_decode($_COOKIE['newPatient']);
-    $resultToDisplay = "";
-
-    // echo "we are here";
-    // echo $parameters[0] . "<br>";
-    // echo $parameters[1] . "<br>";
 
     addNewPatients($conn, $parameters[1]);
-
-    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added patient " . $parameters[1] . '"; }</script>';
 }
 
 if (isset($_POST['sendModifsNewSchedBtn'])) {
     $parameters = json_decode($_COOKIE['newAppointment']);
+
+    echo $parameters[0] . "<br>";
+    echo $parameters[1] . "<br>";
+    // createNewAppointment($conn, $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added new appointment " . '"; }</script>';
+}
+
+if (isset($_POST['sendModifsModifyAptBtn'])) {
+    $parameters = json_decode($_COOKIE['modifiedAppointment']);
     $resultToDisplay = "";
 
-    // echo "we are here";
-    // echo $parameters[0] . "<br>";
-    // echo $parameters[1] . "<br>";
-    createNewAppointment($conn, $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+    echo $parameters[0] . "<br>";
+    echo $parameters[1] . "<br>";
+    updateAppointment($conn, $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
 
     echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added new appointment " . '"; }</script>';
 }
@@ -136,10 +138,12 @@ function addNewPatients($conn, $name){
     $sql = "INSERT INTO patient (name) VALUES ('" . $name . "');";
 
     if (mysqli_query($conn, $sql)){
-        echo "New record created successfully";
-    }else{
-        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+        $message = "New record created successfully";
+    } else {
+        $message = "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
+
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
 
 }
 
@@ -504,12 +508,13 @@ function getMissedAppointmentForAll($conn){
     } else{
         echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
+
     return $tempArr;
 
 }
 
 function getTreatmentDetailForAppointment($conn, $aid){
-    $tempArry = array();
+    $tempArr = array();
     $sql = "SELECT *
     From treatment
     WHERE aid = " . $aid . ";

@@ -1,23 +1,3 @@
-// TEST VALUES
-const workerIDs = [
-    {
-        value: "1",
-        text: "Isabelle Dunford",
-    },
-    {
-        value: "2",
-        text: "Emily Rowland",
-    },
-    {
-        value: "3",
-        text: "Josh Smith",
-    },
-    {
-        value: "4",
-        text: "Corey Ranford",
-    }
-];
-
 // CONSTANTS
 const modificationSelection = document.getElementById("modif-choice");
 const modificationSection = document.getElementById("modifications");
@@ -30,34 +10,8 @@ const deleteAppointment = document.getElementById("delApt");
 const modifyAppointmentID = document.getElementById("modAID");
 const modAptModifications = document.getElementById("modAptModifs");
 
-// function optionExists( optionToCheck, selectElement) { // determines if option already exists in select tag
-//     var optionExists = false,
-//         optionsLength = selectElement.length;
-
-//     while (optionsLength--)
-//     {
-//         if (selectElement.options[optionsLength].value === optionToCheck.value &&
-//             selectElement.options[optionsLength].text === optionToCheck.text)
-//         {
-//             optionExists = true;
-//             break;
-//         }
-//     }
-
-//     return optionExists;
-// }
-
-// function addPoolElement(dbResults, pool) { // add options from database to pool
-//     var optionsList = document.getElementById(pool).options;
-
-//     dbResults.forEach(option => {
-//         if (!optionExists(option, document.getElementById(pool))) {
-//             optionsList.add(
-//                 new Option(option.text, option.value)
-//             )
-//         } // if option already exists, do not recompile
-//     });
-// }
+// VARIABLES
+var dbModifToSend;
 
 function triggerModifSection() {
     if (modificationSelection.value) {
@@ -72,7 +26,7 @@ function triggerModifSection() {
             deleteAppointment.classList.toggle("hidden", true);
             break;
         case "Schedule Appointment":
-            addPoolElement(workerIDs, "schedWID");
+            addPoolElement(dentists, "schedWID");
             addPoolElement(patients, "schedPID");
             addPoolElement(clinics, "schedCID");
             addPatient.classList.toggle("hidden", true);
@@ -105,14 +59,10 @@ function triggerModifSection() {
     }
 }
 
-// function getOptionText(selectedOption) { // as 'value' is associated with the tuple's ID
-//     return (selectedOption.options[selectedOption.selectedIndex].text);
-// }
-
 function addNewPatient() {
     var firstName = document.getElementById("newPatientFirstName").value;
     var lastName = document.getElementById("newPatientLastName").value;
-    var messageToSend = ['addNewPatients', `${firstName} ${lastName}`];
+    var messageToSend= ['addNewPatients', `${firstName} ${lastName}`];
     console.log(messageToSend);
     document.cookie = `newPatient=${JSON.stringify(messageToSend)}`;
 }
@@ -124,7 +74,8 @@ function scheduleNewAppointment() {
     var clinic = document.getElementById("schedCID").value;
     var messageToSend = ['createNewAppointment', worker, patient, clinic, date];
     document.cookie = `newAppointment=${JSON.stringify(messageToSend)}`;
-    console.log(messageToSend);
+    
+    alert(document.cookie);
 }
 
 function modifyExistingAppointment() {
@@ -135,13 +86,17 @@ function modifyExistingAppointment() {
     var date = document.getElementById("modDate").value;
     var clinic = document.getElementById("modCID").value;
     var messageToSend = ['updateAppointment', worker, patient, clinic, status, date];
-    document.cookie = `name=${JSON.stringify(messageToSend)}`;
+    document.cookie = `modifiedAppointment=${JSON.stringify(messageToSend)}`;
     console.log(messageToSend);
 }
 
 function deleteExistingAppointment() {
     var appointment = document.getElementById("delAID").value;
     var messageToSend = ["deleteAppointment", appointment];
-    document.cookie = `name=${JSON.stringify(messageToSend)}`;
+    document.cookie = `no=${JSON.stringify(messageToSend)}`;
     console.log(messageToSend);
+}
+
+function test() {
+    console.log('clicked!');
 }
