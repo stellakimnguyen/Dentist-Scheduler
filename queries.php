@@ -36,19 +36,19 @@ if (isset($_POST['sendRequestInputBtn'])) {
         case "getAppointmentsForDentistForAWeek":
             $temp = getAppointmentsForDentistForAWeek($conn, $parameters[1], $parameters[2], $parameters[3]);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .="Appointment " . $temp[$i]['aid']. "<br>";
+                $resultToDisplay .="Appointment " . $temp[$i]['aid'] . " on " . $temp[$i]['date_time'] . "<br>";
             }
             break;
         case "getAppointmentsForClinicForADay":
             $temp = getAppointmentsForClinicForADay($conn, $parameters[1], $parameters[2], $parameters[3]);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .= "Appointment " . $temp[$i]['aid']. "<br>";
+                $resultToDisplay .= "Appointment " . $temp[$i]['aid'] . " on " . $temp[$i]['date_time'] . "<br>";
             }
             break;
         case "getAppointmentsForPatient":
             $temp = getAppointmentsForPatient($conn, $parameters[1]);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .= "Appointment " . $temp[$i]['aid']. "<br>";
+                $resultToDisplay .= "Appointment " . $temp[$i]['aid'] . " on " . $temp[$i]['date_time'] . "<br>";
             }
             break;
         case "getMissedAppointmentsForAll":
@@ -61,13 +61,13 @@ if (isset($_POST['sendRequestInputBtn'])) {
         case "getTreatmentDetailForAppointment":
             $temp = getTreatmentDetailForAppointment($conn, $parameters[1]);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .= "Treatment " . $temp[$i]['tid']. "<br>"; //how to get count
+                $resultToDisplay .= "Treatment " . $temp[$i]['tid']. " was given in Appointment " . $parameters[1] . "<br>"; //how to get count
             }
             break;
         case "getUnpaidBills":
             $temp = getUnpaidBills($conn);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .= "Cost " . $temp[$i]['cost']. "<br>"; 
+                $resultToDisplay .= "Bill " .( $i + 1) . " costs " . $temp[$i]['cost']. "<br>"; 
             }
             break;
             
@@ -79,31 +79,26 @@ if (isset($_POST['sendRequestInputBtn'])) {
 
 }
 
+// ADDING NEW PATIENT
 if (isset($_POST['sendModifsAddPatientBtn'])) {
     $parameters = json_decode($_COOKIE['newPatient']);
 
     addNewPatients($conn, $parameters[1]);
 }
 
+// ADDING NEW APPOINTMENT
 if (isset($_POST['sendModifsNewSchedBtn'])) {
     $parameters = json_decode($_COOKIE['newAppointment']);
 
-    echo $parameters[0] . "<br>";
-    echo $parameters[1] . "<br>";
-    // createNewAppointment($conn, $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
-
-    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added new appointment " . '"; }</script>';
+    createNewAppointment($conn, $parameters[1], $parameters[2], $parameters[3]);
 }
 
+// MODIFY APPOINTMENT
+// Get appointment to modify
 if (isset($_POST['sendModifsModifyAptBtn'])) {
     $parameters = json_decode($_COOKIE['modifiedAppointment']);
-    $resultToDisplay = "";
 
-    echo $parameters[0] . "<br>";
-    echo $parameters[1] . "<br>";
-    updateAppointment($conn, $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
-
-    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Added new appointment " . '"; }</script>';
+    //updateAppointment($conn, $parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
 }
 
 // TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
@@ -144,22 +139,23 @@ function addNewPatients($conn, $name){
     }
 
     echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
-
 }
 
-function createNewAppointment($conn, $wid, $pid, $cid, $date){
+function createNewAppointment($conn, $wid, $pid, $date){
     
     if (strlen($wid) == 0){
-        $sql = "INSERT INTO appointment (pid,cid,date_time) VALUES (" . $pid . ", " . $cid . ",'" . $date . "');";
-    }else{
-        $sql = "INSERT INTO appointment (wid,pid,cid,date_time) VALUES (" . $wid . ", " . $pid . ", " . $cid . ",'" . $date . "');";
-    }
-    if (mysqli_query($conn, $sql)){
-        echo "New record created successfully";
-    }else{
-        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+        $sql = "INSERT INTO appointment (pid,date_time) VALUES (" . $pid . ",'" . $date . "');";
+    } else {
+        $sql = "INSERT INTO appointment (wid,pid,date_time) VALUES (" . $wid . ", " . $pid . ",'" . $date . "');";
     }
 
+    if (mysqli_query($conn, $sql)){
+        $message =  "New record created successfully";
+    } else {
+        $message =  "Error:" . $sql . "<br>" . mysqli_error($conn);
+    }
+
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
 }
 
 function selectAppointment($conn, $aid){
@@ -175,16 +171,17 @@ function selectAppointment($conn, $aid){
 
 }
 
-function updateAppointment ($conn, $aid, $wid, $pid, $cid, $status, $date_time){
+function updateAppointment ($conn, $aid, $wid, $pid, $status, $date_time){
 
-    $sql = "UPDATE appointment set wid = " . $wid . ", pid = " . $pid . ", cid = " . $cid . ", status = '" . $status . "', date_time = '" . $date_time . "' WHERE aid = " . $aid . ";";
+    $sql = "UPDATE appointment set wid = " . $wid . ", pid = " . $pid . ", status = '" . $status . "', date_time = '" . $date_time . "' WHERE aid = " . $aid . ";";
 
     if (mysqli_query($conn, $sql)){
-        echo "Record updated successfully";
-    }else{
-        echo "Error:" . $sql . "<br>" . mysqli_error($conn);
+        $message = "Record updated successfully";
+    } else {
+        $message = "Error:" . $sql . "<br>" . mysqli_error($conn);
     }
 
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
 }
 
 function deleteAppointment($conn, $aid){
@@ -270,7 +267,7 @@ function getAllClinics($conn){
 function getAllAppointment($conn){
     $tempArr = array();
     $jsArray = array();
-    $sql = "SELECT aid FROM appointment;"; 
+    $sql = "SELECT * FROM appointment;"; 
 
     if($result = mysqli_query($conn, $sql)){
         if(mysqli_num_rows($result) > 0){

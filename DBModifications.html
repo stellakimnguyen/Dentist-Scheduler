@@ -47,13 +47,11 @@
                 </div>
                 <div>
                     <label>Clinic: </label>
-                    <select id="schedCID">
-                        <option value="" selected disabled hidden></option>
-                    </select>
+                    <input placeholder="automated" class="disabled-clinic">
                 </div>
                 <div>
                     <label>Date: </label>
-                    <input id="schedDate" type="date">
+                    <input id="schedDate" type="datetime-local">
                 </div>
                 <form method="post" class="send-container">
                     <div class="sendButton" onclick=scheduleNewAppointment() />
@@ -64,9 +62,9 @@
             <div id="modApt" class="modApt hidden">
                 <div>
                     <label>Which appointment do you want to modify? </label>
-                    <select id="modAID" onchange=triggerModifSection()>
+                    <select id="modAID" name="modAID" onchange=triggerModifSection()>
                         <option value="" selected disabled hidden></option>
-                    </select id>
+                    </select>
                 </div>
                 <div id="modAptModifs" class="modAptModifs hidden">
                     <div>
@@ -83,9 +81,7 @@
                     </div>
                     <div>
                         <label>Clinic: </label>
-                        <select id="modCID">
-                            <option value="" selected disabled hidden></option>
-                        </select id>
+                        <input placeholder="automated" class="disabled-clinic">
                     </div>
                     <div>
                         <label>Status: </label>
@@ -98,7 +94,7 @@
                     </div>
                     <div>
                         <label>Date: </label>
-                        <input type="date" id="modDate">
+                        <input type="datetime-local" id="modDate">
                     </div>
                     <form method="post" class="send-container">
                         <div class="sendButton" onclick=modifyExistingAppointment() />
@@ -115,7 +111,7 @@
                 </select>
                 <form method="post" class="send-container">
                     <div class="sendButton" onclick=deleteExistingAppointment() />
-                    <input type="submit" name="sendModifsBtn">
+                    <input type="submit" name="sendModifsDeleteBtn">
                 </form>
                 </div> <!-- closing the sendButton div (little hack!) -->
             </div>

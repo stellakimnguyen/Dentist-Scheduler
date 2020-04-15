@@ -28,7 +28,6 @@ function triggerModifSection() {
         case "Schedule Appointment":
             addPoolElement(dentists, "schedWID");
             addPoolElement(patients, "schedPID");
-            addPoolElement(clinics, "schedCID");
             addPatient.classList.toggle("hidden", true);
             scheduleAppointment.classList.toggle("hidden", false);
             modifyAppointment.classList.toggle("hidden", true);
@@ -36,13 +35,14 @@ function triggerModifSection() {
             break;
         case "Modify Appointment":
             addPoolElement(appointments, "modAID");
-            addPoolElement(workerIDs, "modWID");
+            addPoolElement(dentists, "modWID");
             addPoolElement(patients, "modPID");
-            addPoolElement(clinics, "modCID");
 
             if (modifyAppointmentID.value) {
                 modAptModifications.classList.toggle("hidden", false);
             }
+
+            document.cookie = `aptToModify=${modifyAppointmentID.value}`;
 
             addPatient.classList.toggle("hidden", true);
             scheduleAppointment.classList.toggle("hidden", true);
@@ -70,9 +70,8 @@ function addNewPatient() {
 function scheduleNewAppointment() {
     var worker = document.getElementById("schedWID").value;
     var patient = document.getElementById("schedPID").value;
-    var date = document.getElementById("schedDate").value;
-    var clinic = document.getElementById("schedCID").value;
-    var messageToSend = ['createNewAppointment', worker, patient, clinic, date];
+    var date = document.getElementById("schedDate").value.replace('T', ' ');
+    var messageToSend = ['createNewAppointment', worker, patient, date];
     document.cookie = `newAppointment=${JSON.stringify(messageToSend)}`;
     
     alert(document.cookie);
@@ -83,11 +82,12 @@ function modifyExistingAppointment() {
     var worker = document.getElementById("modWID").value;
     var patient = document.getElementById("modPID").value;
     var status = document.getElementById("modStatus").value;
-    var date = document.getElementById("modDate").value;
-    var clinic = document.getElementById("modCID").value;
-    var messageToSend = ['updateAppointment', worker, patient, clinic, status, date];
+    var date = document.getElementById("modDate").value.replace('T', ' ');
+    var messageToSend = ['updateAppointment', worker, patient, status, date];
     document.cookie = `modifiedAppointment=${JSON.stringify(messageToSend)}`;
     console.log(messageToSend);
+
+    alert(document.cookie);
 }
 
 function deleteExistingAppointment() {

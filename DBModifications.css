@@ -10,7 +10,6 @@ label {
 input {
     text-align-last: left;
     padding-left: 10px;
-    width: 120px;
 }
 
 .modif-container {
@@ -53,16 +52,20 @@ input {
     transition: 250ms;
 }
 
-.schedApt > select {
-    margin-left: 10px;
-}
-
 .schedApt {
     width: 800px;
 }
 
+.schedApt > select {
+    margin-left: 10px;
+}
+
 .schedApt > div > select {
     width: 100px;
+}
+
+#schedDate, #modDate {
+    max-width: 160px;
 }
 
 .modAptModifs {
@@ -71,6 +74,10 @@ input {
 
 .modAptModifs > div > select {
     width: 60px;
+}
+
+.inline-select {
+    display: inline;
 }
 
 .send-container {
@@ -93,4 +100,11 @@ input {
 .send-container > input:hover {
     top: -15px;
     left: -3px;
+}
+
+.disabled-clinic {
+    background: #cccccc;
+    pointer-events: none;
+    width: 62px;
+    text-align-last: center;
 }
