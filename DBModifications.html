@@ -62,7 +62,7 @@
             <div id="modApt" class="modApt hidden">
                 <div>
                     <label>Which appointment do you want to modify? </label>
-                    <select id="modAID" name="modAID" onchange=triggerModifSection()>
+                    <select id="modAID" name="modAID" onchange={triggerModifSection();updateNextSelections()}>
                         <option value="" selected disabled hidden></option>
                     </select>
                 </div>
@@ -70,7 +70,7 @@
                     <div>
                         <label>Worker: </label>
                         <select id="modWID">
-                            <option value="" selected disabled hidden>unknown</option>
+                            <option value="" selected>unknown</option>
                         </select>
                     </div>
                     <div>

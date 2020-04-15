@@ -35,7 +35,7 @@ function triggerModifSection() {
             break;
         case "Modify Appointment":
             addPoolElement(appointments, "modAID");
-            addPoolElement(dentists, "modWID");
+            addPoolElement(dentists, "modWID"); // worker IDs
             addPoolElement(patients, "modPID");
 
             if (modifyAppointmentID.value) {
@@ -57,6 +57,13 @@ function triggerModifSection() {
             deleteAppointment.classList.toggle("hidden", false);
             break;
     }
+}
+
+function updateNextSelections() {
+    document.getElementById('modWID').value = appointments[modifyAppointmentID.value - 1]['workerID'];
+    document.getElementById('modPID').value = appointments[modifyAppointmentID.value - 1]['patientID'];
+    document.getElementById('modStatus').value = appointments[modifyAppointmentID.value - 1]['status'];
+    document.getElementById('modDate').value = appointments[modifyAppointmentID.value - 1]['datetime'].replace(" ", "T");
 }
 
 function addNewPatient() {
@@ -97,6 +104,6 @@ function deleteExistingAppointment() {
     console.log(messageToSend);
 }
 
-function test() {
-    console.log('clicked!');
+function test(something) {
+    alert(something);
 }
