@@ -53,7 +53,7 @@ input {
 }
 
 .schedApt {
-    width: 800px;
+    min-width: 800px;
 }
 
 .schedApt > select {
