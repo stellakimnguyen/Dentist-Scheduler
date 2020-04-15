@@ -16,10 +16,6 @@ if(isset($_POST['button1'])) { // isset gets button click of button with name bu
     closeConnection($conn);
 }
 
-echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . "Awaiting query submission" . '"; }</script>';
-
-$receivingResult = "";
-
 $conn = openConnection();
 
 if (isset($_POST['sendRequestInputBtn'])) {
@@ -75,7 +71,9 @@ if (isset($_POST['sendRequestInputBtn'])) {
             $resultToDisplay = "Awaiting query submission";           
     }
 
-    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $resultToDisplay . '"; }</script>';
+    if (!empty($resultToDisplay)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $resultToDisplay . '"; }</script>';
+    }
 
 }
 
@@ -98,7 +96,7 @@ if (isset($_POST['sendModifsNewSchedBtn'])) {
 if (isset($_POST['sendModifsModifyAptBtn'])) {
     $parameters = json_decode($_COOKIE['modifiedAppointment']);
 
-    //updateAppointment($conn, $parameters[0], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
+    updateAppointment($conn, $_COOKIE['aptToModify'], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
 }
 
 // TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
@@ -124,6 +122,15 @@ $allClinics = getAllClinics($conn);
 class jsElement {
     public $value;
     public $text;
+}
+
+class modifiableAppointment extends jsElement {
+    // public $value;
+    // public $text;
+    public $workerID;
+    public $patientID;
+    public $status;
+    public $datetime;
 }
 
 //QUERIES USED FOR PART 2
@@ -213,19 +220,21 @@ function getAllPatients($conn){
            
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
     for ($i = 0; $i< sizeof($tempArr); $i++){
-        // echo $tempArr[$i]['pid'] . $tempArr[$i]['name'];
-
         ${"patient" . $i} = new jsElement();
         ${"patient" . $i} -> value = $tempArr[$i]['pid'];
         ${"patient" . $i} -> text = $tempArr[$i]['name'];
         $jsArray[$i] = ${"patient" . $i};
+    }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
     }
 
     return $jsArray;
@@ -246,10 +255,10 @@ function getAllClinics($conn){
            
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
     for ($i = 0; $i< sizeof($tempArr); $i++){
@@ -260,6 +269,10 @@ function getAllClinics($conn){
         ${"clinic" . $i} -> text = $tempArr[$i]['name'];
         $jsArray[$i] = ${"clinic" . $i};
     } // access array that is returned
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
+    }
 
     return $jsArray;
 }
@@ -278,10 +291,10 @@ function getAllAppointment($conn){
            
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
     // for ($i = 0; $i< sizeof($tempArr); $i++){
@@ -292,7 +305,15 @@ function getAllAppointment($conn){
         ${"appointment" . $i} = new jsElement();
         ${"appointment" . $i} -> value = $tempArr[$i]['aid'];
         ${"appointment" . $i} -> text = 'Appointment ' . $tempArr[$i]['aid'];
+        ${"appointment" . $i} -> workerID = $tempArr[$i]['wid'];
+        ${"appointment" . $i} -> patientID = $tempArr[$i]['pid'];
+        ${"appointment" . $i} -> status = $tempArr[$i]['status'];
+        ${"appointment" . $i} -> datetime = $tempArr[$i]['date_time'];
         $jsArray[$i] = ${"appointment" . $i};
+    }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
     }
 
     return $jsArray;
@@ -313,26 +334,29 @@ function queryDBA($conn, $sql){ //to modify
                 }
                 mysqli_free_result($result);
             } else {
-                echo "No records matching your query were found.";
+                $message = "No records matching your query were found.";
             }
             
            return $tempArr;
             
         } else if (strcmp($keyword, "DELETE") == 0){
-            echo "Record has been successfully deleted";
+            $message = "Record has been successfully deleted";
         }else if (strcmp($keyword, "INSERT") == 0){
-            echo "Record has been successfully added";
+            $message = "Record has been successfully added";
         }else if (strcmp($keyword, "UPDATE") == 0){
-            echo "Record has been successfully updated";
+            $message = "Record has been successfully updated";
         }else{
-            echo "Query run successfully.";
+            $message = "Query run successfully.";
         }
 
         
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
+    }
 
 }
 
@@ -354,10 +378,10 @@ function retrieveAllDentists($conn){
            
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
     for ($i = 0; $i< sizeof($tempArr); $i++){
@@ -367,6 +391,10 @@ function retrieveAllDentists($conn){
         ${"dentist" . $i} -> text = $tempArr[$i]['name'];
 
         $jsArray[$i] = ${"dentist" . $i};
+    }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
     }
 
     return $jsArray;
@@ -387,15 +415,19 @@ function getAllDentistsFromAllClinics($conn) {
            
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
     // for ($i = 0; $i< sizeof($tempArr); $i++){
     //     echo $tempArr[$i]['wid'] . " xx " . $tempArr[$i]['name'] . " xx " . $tempArr[$i]['cid'] . "<br>";
     // }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
+    }
 
     return $tempArr;
 }
@@ -417,16 +449,20 @@ function getAppointmentsForDentistForAWeek($conn, $wid, $beginning, $end){
             
             // Free result set
             mysqli_free_result($result);
-        } else{
-            echo "No records matching your query were found.";
+        } else {
+            $message = "No records matching your query were found.";
         }
     } else {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
     // for ($i = 0; $i < sizeof($tempArr); $i++){
     //     echo $tempArr[$i]['aid'];
     // }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
+    }
 
     return $tempArr;
 
@@ -447,10 +483,14 @@ function getAppointmentsForClinicForADay($conn, $cid, $beginning, $end){
             // Free result set
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
     }
 
     return $tempArr;
@@ -474,10 +514,14 @@ function getAppointmentsForPatient($conn, $pid){
             // Free result set
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
     }
 
     return $tempArr;
@@ -500,10 +544,14 @@ function getMissedAppointmentForAll($conn){
             // Free result set
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
     }
 
     return $tempArr;
@@ -527,11 +575,16 @@ function getTreatmentDetailForAppointment($conn, $aid){
             // Free result set
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
+    }
+
     return $tempArr;
 }
 
@@ -551,11 +604,16 @@ function getUnpaidBills($conn){
             // Free result set
             mysqli_free_result($result);
         } else{
-            echo "No records matching your query were found.";
+            $message = "No records matching your query were found.";
         }
     } else{
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
+
+    if (isset($message)) {
+        echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
+    }
+
     return $tempArr;
 }
 
