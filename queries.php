@@ -99,19 +99,31 @@ if (isset($_POST['sendModifsModifyAptBtn'])) {
     updateAppointment($conn, $_COOKIE['aptToModify'], $parameters[1], $parameters[2], $parameters[3], $parameters[4]);
 }
 
-// TODO: SWITCH FOR ARRAY AT INDEX 0 (function name)
-/*
- if (isset($_POST['action'])) {
-        switch ($_POST['action']) {
-            case 'insert':
-                insert();
-                break;
-            case 'select':
-                select();
-                break;
-        }
-    }
-*/
+// DELETE APPOINTMENT
+if (isset($_POST['sendModifsDeleteBtn'])) {
+    $parameters = json_decode($_COOKIE['appointmentToDelete']);
+
+    deleteAppointment($conn, $parameters[1]);
+}
+
+// QUERY DBA
+if (isset($_POST['sendQueryBtn'])) {
+    $parameter = json_decode($_COOKIE['DBAquery']);
+    // $temp = queryDBA($conn, $parameter);
+    // $resultToDisplay = "";
+
+    // for ($i = 0; $i < sizeof($temp); $i++) {
+    //     $resultToDisplay .= json_encode($temp[$i]) . "<br>";
+    // }
+
+    // //DELETE FROM `appointment` WHERE (`aid` = '8');
+
+    // $test = json_encode($resultToDisplay);
+    // echo $test;
+
+    // echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $test . '"; }</script>';
+    queryDBA($conn, $parameter);
+}
 
 // PHP VARIABLES FOR JS
 $allPatients = getAllPatients($conn); 
@@ -199,11 +211,12 @@ function deleteAppointment($conn, $aid){
     $sql = "DELETE FROM appointment WHERE aid = " . $aid . ";";
 
     if(mysqli_query($conn, $sql)){
-        echo "Record deleted successfully";
-    }else{
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        $message = "Record deleted successfully";
+    } else {
+        $message = "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
 }
 
 function getAllPatients($conn){
@@ -333,24 +346,24 @@ function queryDBA($conn, $sql){ //to modify
                     
                 }
                 mysqli_free_result($result);
+            
+                // return $tempArr;
+                displaySelect($tempArr);
             } else {
                 $message = "No records matching your query were found.";
             }
             
-           return $tempArr;
-            
         } else if (strcmp($keyword, "DELETE") == 0){
             $message = "Record has been successfully deleted";
-        }else if (strcmp($keyword, "INSERT") == 0){
+        } else if (strcmp($keyword, "INSERT") == 0){
             $message = "Record has been successfully added";
-        }else if (strcmp($keyword, "UPDATE") == 0){
+        } else if (strcmp($keyword, "UPDATE") == 0){
             $message = "Record has been successfully updated";
-        }else{
+        } else {
             $message = "Query run successfully.";
         }
-
         
-    } else{
+    } else {
         $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     }
 
@@ -358,6 +371,19 @@ function queryDBA($conn, $sql){ //to modify
         echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $message . '"; }</script>';
     }
 
+}
+
+function displaySelect($resultArray) {
+    $resultToDisplay = "";
+
+    for ($i = 0; $i < sizeof($resultArray); $i++) {
+        $resultToDisplay .= json_encode($resultArray[$i]) . "<br>";
+    }
+
+    // $test = print_r($resultArray, true);
+    $test = '("'.implode('", "', (array)$resultToDisplay).'")';
+    echo $test;
+    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $test . '"; }</script>';
 }
 
 //PART 1 QUERIES

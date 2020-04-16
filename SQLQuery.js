@@ -1,4 +1,4 @@
 function sendQuery() {
     var query = document.getElementById("query").value;
-    console.log(query);
+    document.cookie = `DBAquery=${JSON.stringify(query)}`;
 }
