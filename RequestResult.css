@@ -26,3 +26,21 @@
     max-height: 100px;
     overflow-y: auto;
 }
+
+.result::-webkit-scrollbar {
+    width: 7px;
+  }
+
+.result::-webkit-scrollbar-track {
+    background: #e8e8e8;
+    border-radius: 7px;
+}
+
+.result::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 7px;
+  }
+
+  .result::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }

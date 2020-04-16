@@ -20,15 +20,18 @@ label {
 
 .sql-container > input {
     font-family: "Lucida Console";
+    width: 100%;
+    margin-left: 10px;
 }
 
-.sql-container > input {
-    width: 75%;
+.sql-container > label {
+    width: 220px;
 }
 
 .send-container {
     position: relative;
     transition: 250ms;
+    margin-left: 10px;
 }
 
 .send-container:hover {
