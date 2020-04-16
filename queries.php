@@ -26,7 +26,7 @@ if (isset($_POST['sendRequestInputBtn'])) {
         case "getAllDentistsFromAllClinics":
             $temp = getAllDentistsFromAllClinics($conn);
             for ($i = 0; $i < sizeof($temp); $i++){
-                $resultToDisplay .= $temp[$i]['wid'] . "\t " . $temp[$i]['name'] . "\t" . $temp[$i]['cid'] . "<br>";
+                $resultToDisplay .= "ID: " . $temp[$i]['wid'] . "\t " . "Name: " . $temp[$i]['name'] . "\t" . "Clinic ID: " . $temp[$i]['cid'] . "<br>";
             }
             break;
         case "getAppointmentsForDentistForAWeek":
@@ -336,7 +336,7 @@ function queryDBA($conn, $sql){ //to modify
     $tempArr = array();
     $arr = explode(' ',trim($sql));
     $keyword = $arr[0];
-    if($result = mysqli_query($conn, $sql)){
+    if(!empty($sql) && $result = mysqli_query($conn, $sql)){
         if (strcmp($keyword, "SELECT") == 0){
             if(mysqli_num_rows($result) > 0){
             
@@ -364,7 +364,7 @@ function queryDBA($conn, $sql){ //to modify
         }
         
     } else {
-        $message = "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $message = "ERROR: Not able to execute '$sql'. " . "<br>" . mysqli_error($conn);
     }
 
     if (isset($message)) {
@@ -375,15 +375,21 @@ function queryDBA($conn, $sql){ //to modify
 
 function displaySelect($resultArray) {
     $resultToDisplay = "";
+    $test = json_encode($resultToDisplay);
 
     for ($i = 0; $i < sizeof($resultArray); $i++) {
         $resultToDisplay .= json_encode($resultArray[$i]) . "<br>";
     }
 
-    // $test = print_r($resultArray, true);
-    $test = '("'.implode('", "', (array)$resultToDisplay).'")';
-    echo $test;
-    echo '<script type="text/javascript">window.onload = function() { document.getElementById("result").innerHTML = "' . $test . '"; }</script>';
+    echo "<script type='text/javascript'>";
+    echo "
+            window.onload = function() {
+                document.getElementById('result').innerHTML = '";
+    // echo ($test);
+    echo $resultToDisplay;
+    echo "';
+            }
+        </script>";
 }
 
 //PART 1 QUERIES
