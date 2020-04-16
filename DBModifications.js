@@ -59,7 +59,7 @@ function triggerModifSection() {
     }
 }
 
-function updateNextSelections() {
+function updateNextSelections() { // fill in select optiosn with values from chosen appointment
     document.getElementById('modWID').value = appointments[modifyAppointmentID.value - 1]['workerID'];
     document.getElementById('modPID').value = appointments[modifyAppointmentID.value - 1]['patientID'];
     document.getElementById('modStatus').value = appointments[modifyAppointmentID.value - 1]['status'];
@@ -70,7 +70,6 @@ function addNewPatient() {
     var firstName = document.getElementById("newPatientFirstName").value;
     var lastName = document.getElementById("newPatientLastName").value;
     var messageToSend= ['addNewPatients', `${firstName} ${lastName}`];
-    console.log(messageToSend);
     document.cookie = `newPatient=${JSON.stringify(messageToSend)}`;
 }
 
@@ -80,8 +79,6 @@ function scheduleNewAppointment() {
     var date = document.getElementById("schedDate").value.replace('T', ' ');
     var messageToSend = ['createNewAppointment', worker, patient, date];
     document.cookie = `newAppointment=${JSON.stringify(messageToSend)}`;
-    
-    alert(document.cookie);
 }
 
 function modifyExistingAppointment() {
@@ -92,18 +89,10 @@ function modifyExistingAppointment() {
     var date = document.getElementById("modDate").value.replace('T', ' ');
     var messageToSend = ['updateAppointment', worker, patient, status, date];
     document.cookie = `modifiedAppointment=${JSON.stringify(messageToSend)}`;
-    console.log(messageToSend);
-
-    alert(document.cookie);
 }
 
 function deleteExistingAppointment() {
     var appointment = document.getElementById("delAID").value;
     var messageToSend = ["deleteAppointment", appointment];
-    document.cookie = `no=${JSON.stringify(messageToSend)}`;
-    console.log(messageToSend);
-}
-
-function test(something) {
-    alert(something);
+    document.cookie = `appointmentToDelete=${JSON.stringify(messageToSend)}`;
 }
