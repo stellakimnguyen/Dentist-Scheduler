@@ -1,0 +1,129 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <div class="modif-container">
+        <h1>What do you wish to modify?</h1>
+        <label>Action: </label>
+        <select onchange=triggerModifSection() id="modif-choice">
+            <option value="" selected disabled hidden />
+            <option>Add Patient</option>
+            <option>Schedule Appointment</option>
+            <option>Modify Appointment</option>
+            <option>Delete Appointment</option>
+        </select>
+
+        <div id="modifications" class="modifications hidden">
+            <div id="addPatient" class="addPatient hidden">
+                <div>
+                    <label>First Name: </label>
+                    <input id="newPatientFirstName" type="text">
+                </div>
+                <div>
+                    <label>Last Name: </label>
+                    <input id="newPatientLastName" type="text">
+                </div>
+                <form method="post" class="send-container">
+                    <div class="sendButton" onclick=addNewPatient() />
+                    <input type="submit" name="sendModifsAddPatientBtn">
+                </form>
+                    </div> <!-- closing the sendButton div (little hack!) -->
+            </div>
+            <div id="schedApt" class="schedApt hidden">
+                <div>
+                    <label>Worker: </label>
+                    <select id="schedWID">
+                        <option value="" selected disabled hidden>unknown</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Patient: </label>
+                    <select id="schedPID">
+                        <option value="" selected disabled hidden></option>
+                    </select>
+                </div>
+                <div>
+                    <label>Clinic: </label>
+                    <input placeholder="automated" class="disabled-clinic">
+                </div>
+                <div>
+                    <label>Date: </label>
+                    <input id="schedDate" type="datetime-local">
+                </div>
+                <form method="post" class="send-container">
+                    <div class="sendButton" onclick=scheduleNewAppointment() />
+                    <input type="submit" name="sendModifsNewSchedBtn">
+                </form>
+                    </div> <!-- closing the sendButton div (little hack!) -->
+            </div>
+            <div id="modApt" class="modApt hidden">
+                <div>
+                    <label>Which appointment do you want to modify? </label>
+                    <select id="modAID" name="modAID" onchange={triggerModifSection();updateNextSelections()}>
+                        <option value="" selected disabled hidden></option>
+                    </select>
+                </div>
+                <div id="modAptModifs" class="modAptModifs hidden">
+                    <div>
+                        <label>Worker: </label>
+                        <select id="modWID">
+                            <option value="" selected>unknown</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Patient: </label>
+                        <select id="modPID">
+                            <option value="" selected disabled hidden></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Clinic: </label>
+                        <input placeholder="automated" class="disabled-clinic">
+                    </div>
+                    <div>
+                        <label>Status: </label>
+                        <select id="modStatus">
+                            <option value="" selected disabled hidden></option>
+                            <option value="missed">missed</option>
+                            <option value="complete">complete</option>
+                            <option value="requested">requested</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Date: </label>
+                        <input type="datetime-local" id="modDate">
+                    </div>
+                    <form method="post" class="send-container">
+                        <div class="sendButton" onclick=modifyExistingAppointment() />
+                        <input type="submit" name="sendModifsModifyAptBtn">
+                    </form>
+                        </div> <!-- closing the sendButton div (little hack!) -->
+                </div>
+
+            </div>
+            <div id="delApt" class="delApt hidden">
+                <label>Which appointment do you want to delete? </label>
+                <select id="delAID" onchange=triggerModifSection()>
+                    <option value="" selected disabled hidden></option>
+                </select>
+                <form method="post" class="send-container">
+                    <div class="sendButton" onclick=deleteExistingAppointment() />
+                    <input type="submit" name="sendModifsDeleteBtn">
+                </form>
+                </div> <!-- closing the sendButton div (little hack!) -->
+            </div>
+        </div>
+    </div> <!-- End of Container -->
+
+    <link rel="stylesheet" href="DBModifications.css">
+
+</head>
+
+<body>
+    <script src="DBModifications.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+label {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.sql-container {
+    margin-top: 30px;
+    padding: 15px 30px;
+    border-radius: 15px;
+    background: #eaedf4;
+    transition: 250ms;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    -moz-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
+}
+
+.sql-container > input {
+    font-family: "Lucida Console";
+    width: 100%;
+    margin-left: 10px;
+}
+
+.sql-container > label {
+    width: 220px;
+}
+
+.send-container {
+    position: relative;
+    transition: 250ms;
+    margin-left: 10px;
+}
+
+.send-container:hover {
+    transform: scale(1.2);
+}
+
+.send-container > input {
+    position: absolute;
+    width: 15px;
+    padding-left: 0;
+    top: -14px;
+    opacity: 0;
+}
+
+.send-container > input:hover {
+    top: -15px;
+    left: -3px;
+}

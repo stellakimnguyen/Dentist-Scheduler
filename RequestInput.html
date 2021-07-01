@@ -4,11 +4,12 @@
 
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Cache-control" content="no-cache">
 
   <title>Dental Clinics</title>
   <meta name="userInput" content="Inputs">
 
-  <div class="container">
+  <div class="request-container">
     <div class="content">
 
       <div class="requestInput">
@@ -18,7 +19,7 @@
           <label>Get </label>
 
           <select onchange="computePreview()" id="info">
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="details">details</option>
             <option value="number">number</option>
           </select>
@@ -26,7 +27,7 @@
           <label> of all </label>
 
           <select onchange="computePreview()" id="type">
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="dentists">dentists</option>
             <option value="appointments">appointments</option>
             <option value="missed appointments">missed appointments</option>
@@ -37,14 +38,14 @@
           <label> for </label>
 
           <select id="number" onchange={triggerAdditionalSection();computePreview()}>
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="all">all</option>
             <option value="given">given</option>
             <option value="each">each</option>
           </select>
 
           <select id="pool" onchange={additionalPoolDetails();computePreview()}>
-            <option value="" selected disabled hidden />
+            <option value="" selected disabled hidden></option>
             <option value="clinic(s)">clinic(s)</option>
             <option value="dentist(s)">dentist(s)</option>
             <option value="patient">patient(s)</option>
@@ -54,7 +55,7 @@
           <div id="onSpecificPeriod">
             <label> on </label>
             <select id="date" onchange={additionalDateDetails();computePreview()}>
-              <option value="" selected disabled hidden />
+              <option value="" selected disabled hidden></option>
               <option value="all days">all days</option>
               <option value="specific week">specific week</option>
               <option value="specific date">specific date</option>
@@ -65,29 +66,29 @@
           <div id="additionalDetails" class="additionalDetails hidden">
             <div id="patientSelection" class="patientSelection hidden">
               <h4>Which patient?</h4>
-              <select onchange="computePreview('patient')" id="patient">
-                <option value="" selected disabled hidden />
+              <select id="patient" onchange="computePreview('patient', this)">
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
-            <div onchange="computePreview('dentist')" id="dentistSelection" class="dentistSelection hidden">
+            <div id="dentistSelection" class="dentistSelection hidden">
               <h4>Which dentist?</h4>
-              <select id="dentist">
-                <option value="" selected disabled hidden />
+              <select id="dentist" onchange="computePreview('dentist', this)">
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
-            <div onchange="computePreview('clinic')" id="clinicSelection" class="clinicSelection hidden">
+            <div id="clinicSelection" class="clinicSelection hidden">
               <h4>Which clinic?</h4>
-              <select id="clinic">
-                <option value="" selected disabled hidden />
+              <select id="clinic" onchange="computePreview('clinic', this)">
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
-            <div onchange="computePreview('appointment')" id="appointmentSelection" class="appointmentSelection hidden">
+            <div id="appointmentSelection" class="appointmentSelection hidden">
               <h4>Which appointment?</h4>
-              <select id="appointment">
-                <option value="" selected disabled hidden />
+              <select id="appointment" onchange="computePreview('appointment', this)">
+                <option value="" selected disabled hidden></option>
               </select id>
             </div>
 
@@ -104,17 +105,20 @@
       <div class="requestPreview">
         <label>Request Preview: </label>
         <div id="stringRequest">Preview will be here</div>
-        <div class="sendButton" onclick=sendRequest() />
+        <form method="post" class="send-container">
+          <div class="sendButton" onclick=sendRequest() />
+          <input type="submit" onclick="console.log('test')" name="sendRequestInputBtn" >
+        </form>
       </div>
-  </div><!-- End of content -->
+    </div><!-- End of content -->
   </div> <!-- End of Container -->
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="RequestInput.css">
 
 </head>
 
 <body>
-  <script src="functions.js"></script>
+  <script src="RequestInput.js"></script>
 </body>
 
 </html>
